@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Play — VocalRehab{% endblock %}
+
+{% block content %}
+<div class="game-container">
+
+    <!-- Top Bar: Score, Streak, Difficulty, Trial Counter -->
+    <div class="game-topbar">
+        <div class="topbar-item">
+            <div class="topbar-label">Score</div>
+            <div class="topbar-value" id="score-value">0</div>
+        </div>
+        <div class="topbar-item">
+            <div class="topbar-label">Streak 🔥</div>
+            <div class="topbar-value streak" id="streak-value">0</div>
+        </div>
+        <div class="topbar-item">
+            <div class="topbar-label">Best Streak</div>
+            <div class="topbar-value" id="best-streak-value">0</div>
+        </div>
+        <div class="topbar-item">
+            <div class="topbar-label">Difficulty</div>
+            <div id="difficulty-stars">⭐☆☆</div>
+        </div>
+        <div class="topbar-item">
+            <div class="topbar-label">Trial</div>
+            <div class="topbar-value" id="trial-counter">0 / 15</div>
+        </div>
+        <div class="topbar-item">
+            <span class="category-badge" id="category-badge">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Game Arena -->
+    <div class="game-arena" id="game-arena">
+        <!-- Character -->
+        <div class="game-character" id="game-character">🧙‍♂️</div>
+
+        <!-- Options -->
+        <div class="game-options">
+            <!-- Left Option -->
+            <div class="game-option" id="option-left">
+                <span class="option-hint">🚢</span>
+                <span class="option-word">ship</span>
+            </div>
+
+            <!-- Right Option -->
+            <div class="game-option" id="option-right">
+                <span class="option-hint">🐑</span>
+                <span class="option-word">sheep</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Microphone Section -->
+    <div class="mic-section">
+        <button class="mic-btn" id="mic-btn" onclick="game && game.startListening()" title="Click to speak">
+            🎤
+        </button>
+        <div class="waveform" id="waveform">
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+        </div>
+    </div>
+
+    <!-- Game Status -->
+    <div class="game-status status-info" id="game-status">
+        🎮 Ready! Click the microphone and say the highlighted word.
+    </div>
+
+    <!-- Feedback Tip -->
+    <div class="feedback-tip" id="feedback-tip">
+        <span class="feedback-text"></span>
+    </div>
+</div>
+
+<!-- Difficulty Change Banner -->
+<div class="difficulty-message" id="difficulty-message"></div>
+
+<!-- Confetti Container -->
+<div class="confetti-container" id="confetti-container"></div>
+
+<!-- Session Summary Overlay -->
+<div class="session-summary-overlay" id="session-summary-overlay">
+    <div class="summary-card">
+        <h2>🎉 Session Complete!</h2>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <div class="value" id="summary-score">0</div>
+                <div class="label">Total Score</div>
+            </div>
+            <div class="summary-item">
+                <div class="value" id="summary-accuracy">0%</div>
+                <div class="label">Accuracy</div>
+            </div>
+            <div class="summary-item">
+                <div class="value" id="summary-correct">0</div>
+                <div class="label">Correct</div>
+            </div>
+            <div class="summary-item">
+                <div class="value" id="summary-trials">0</div>
+                <div class="label">Total Trials</div>
+            </div>
+            <div class="summary-item">
+                <div class="value" id="summary-streak">0</div>
+                <div class="label">Best Streak 🔥</div>
+            </div>
+            <div class="summary-item">
+                <div class="value" id="summary-time">-</div>
+                <div class="label">Duration</div>
+            </div>
+        </div>
+        <div class="summary-recommendations">
+            <strong>💡 Recommendations:</strong>
+            <ul id="summary-recommendations"></ul>
+        </div>
+        <div class="mt-4">
+            <a href="/game?user_id={{ user.id if user else '' }}" class="btn btn-primary-custom me-2">Play Again 🎮</a>
+            <a href="/progress?user_id={{ user.id if user else '' }}" class="btn btn-success-custom">View Progress 📊</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const userId = {{ user.id if user else 'null' }};
+    if (userId) {
+        startGame(userId, {
+            sessionLength: 15,
+            gameType: 'direction',
+            difficulty: 1
+        });
+    }
+});
+</script>
+{% endblock %}

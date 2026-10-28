@@ -1,0 +1,687 @@
+{% extends "base.html" %}
+
+{% block title %}Voice Translator — VocalRehab{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h1 class="fw-900" style="font-size: 2.5rem;">
+            🗣️ Dysarthric Voice <span style="color: var(--primary);">Translator</span>
+        </h1>
+        <p class="lead text-muted">
+            Speak or upload a recording — we'll translate your voice into clear text that everyone can understand.
+        </p>
+    </div>
+
+    <!-- Mode Tabs -->
+    <ul class="nav nav-pills justify-content-center mb-4" id="translateTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4 py-2 fw-bold" id="live-tab" data-bs-toggle="pill"
+                    data-bs-target="#live-panel" type="button" role="tab">
+                🎤 Live Microphone
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-2 fw-bold" id="upload-tab" data-bs-toggle="pill"
+                    data-bs-target="#upload-panel" type="button" role="tab">
+                📁 Upload Audio
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+
+        <!-- ============ LIVE MICROPHONE TAB ============ -->
+        <div class="tab-pane fade show active" id="live-panel" role="tabpanel">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card-custom p-4 p-md-5 text-center">
+
+                        <!-- Mic Button -->
+                        <div class="mb-4">
+                            <button class="mic-btn" id="live-mic-btn" onclick="toggleLiveRecording()" title="Click to speak">
+                                🎤
+                            </button>
+                            <p class="mt-3 fw-semibold" id="live-status">
+                                Tap the microphone and start speaking
+                            </p>
+                        </div>
+
+                        <!-- Waveform -->
+                        <div class="waveform justify-content-center mb-3" id="live-waveform">
+                            <div class="waveform-bar"></div><div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div><div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div><div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div><div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div>
+                        </div>
+
+                        <!-- Raw ASR Output -->
+                        <div class="mb-3 text-start" id="raw-section" style="display:none;">
+                            <label class="form-label fw-bold text-muted">🔊 Raw Speech (what the mic heard):</label>
+                            <div class="p-3 rounded" style="background: #FFF3E0; border: 1px solid #FFB300;">
+                                <span id="raw-transcript" class="fw-semibold" style="color: #E65100;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Translated Clean Output -->
+                        <div class="mb-3 text-start" id="clean-section" style="display:none;">
+                            <label class="form-label fw-bold" style="color: var(--success);">
+                                ✨ Translated (clear text):
+                            </label>
+                            <div class="p-3 rounded" style="background: #E8F5E9; border: 2px solid var(--success);">
+                                <span id="clean-transcript" class="fw-bold fs-5" style="color: #1B5E20;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Confidence & Analysis -->
+                        <div class="mb-3 text-start" id="analysis-section" style="display:none;">
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <div class="stat-card py-2">
+                                        <div class="stat-value fs-4" id="conf-value">-</div>
+                                        <div class="stat-label small">Confidence</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-card py-2">
+                                        <div class="stat-value fs-4" id="error-count">-</div>
+                                        <div class="stat-label small">Corrections</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-card py-2">
+                                        <div class="stat-value fs-4" id="severity-value">-</div>
+                                        <div class="stat-label small">Clarity</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feedback / Tips -->
+                        <div class="mb-3 text-start" id="tips-section" style="display:none;">
+                            <div class="p-3 rounded" style="background: #F3E5F5; border: 1px solid #CE93D8;">
+                                <strong>💡 Speech Tips:</strong>
+                                <span id="speech-tips"></span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 justify-content-center flex-wrap mt-3" id="action-btns" style="display:none !important;">
+                            <button class="btn btn-primary-custom" onclick="speakCleanText()">
+                                🔊 Read Aloud
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="copyCleanText()">
+                                📋 Copy Text
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="clearLiveResults()">
+                                🔄 Clear
+                            </button>
+                        </div>
+
+                        <!-- Continuous Mode Toggle -->
+                        <div class="form-check form-switch mt-4 d-flex justify-content-center gap-2">
+                            <input class="form-check-input" type="checkbox" id="continuous-mode">
+                            <label class="form-check-label fw-semibold" for="continuous-mode">
+                                Continuous Mode (keeps listening)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Conversation History -->
+                    <div class="card-custom p-4 mt-4" id="history-card" style="display:none;">
+                        <h5>📝 Conversation History</h5>
+                        <div id="conversation-history" class="mt-3"></div>
+                        <div class="text-end mt-2">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="copyAllHistory()">
+                                📋 Copy All
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="clearHistory()">
+                                🗑️ Clear History
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ UPLOAD AUDIO TAB ============ -->
+        <div class="tab-pane fade" id="upload-panel" role="tabpanel">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card-custom p-4 p-md-5">
+
+                        <!-- Upload Area -->
+                        <div class="text-center mb-4">
+                            <div class="upload-dropzone" id="dropzone"
+                                 ondragover="event.preventDefault(); this.classList.add('dragover')"
+                                 ondragleave="this.classList.remove('dragover')"
+                                 ondrop="handleDrop(event)">
+                                <span style="font-size: 3rem;">📂</span>
+                                <h4 class="fw-bold mt-2">Drop audio file here</h4>
+                                <p class="text-muted">or click to browse</p>
+                                <p class="text-muted small">Supports: WAV, MP3, FLAC, OGG, WEBM (max 25 MB)</p>
+                                <input type="file" id="audio-file-input" accept="audio/*,.wav,.mp3,.flac,.ogg,.webm"
+                                       onchange="handleFileSelect(event)" style="display:none;">
+                                <button class="btn btn-primary-custom mt-2"
+                                        onclick="document.getElementById('audio-file-input').click()">
+                                    📁 Choose File
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Selected file info -->
+                        <div id="file-info" style="display:none;" class="mb-3">
+                            <div class="d-flex align-items-center gap-3 p-3 rounded" style="background: var(--bg);">
+                                <span style="font-size: 2rem;">🎵</span>
+                                <div>
+                                    <strong id="file-name">-</strong><br>
+                                    <small class="text-muted" id="file-size">-</small>
+                                </div>
+                                <audio id="audio-preview" controls class="ms-auto" style="max-width: 200px;"></audio>
+                            </div>
+                        </div>
+
+                        <!-- Translate Button -->
+                        <div class="text-center mb-4">
+                            <button class="btn btn-success-custom btn-lg px-5" id="translate-btn"
+                                    onclick="translateUploadedAudio()" disabled>
+                                🔄 Translate Voice
+                            </button>
+                            <div class="spinner-border text-primary mt-3" role="status" id="upload-spinner" style="display:none;">
+                                <span class="visually-hidden">Processing...</span>
+                            </div>
+                            <p class="mt-2 text-muted" id="upload-status"></p>
+                        </div>
+
+                        <!-- Upload Results -->
+                        <div id="upload-results" style="display:none;">
+                            <!-- Reliability Warning (shown when low confidence) -->
+                            <div id="upload-reliability-warning" class="mb-3 p-3 rounded" style="display:none; background: #FFEBEE; border: 2px solid #EF5350;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span style="font-size: 1.5rem;">⚠️</span>
+                                    <div>
+                                        <strong style="color: #C62828;">Low Confidence — Translation May Be Incorrect</strong>
+                                        <p class="mb-0 small" style="color: #B71C1C;">
+                                            The speech was too unclear for accurate recognition.
+                                            Try speaking more slowly, closer to the mic, or in a quieter environment.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- High confidence banner -->
+                            <div id="upload-reliability-high" class="mb-3 p-3 rounded" style="display:none; background: #E8F5E9; border: 2px solid #4CAF50;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span style="font-size: 1.5rem;">✅</span>
+                                    <strong style="color: #2E7D32;">High Confidence — Translation Reliable</strong>
+                                </div>
+                            </div>
+
+                            <!-- Medium confidence banner -->
+                            <div id="upload-reliability-medium" class="mb-3 p-3 rounded" style="display:none; background: #E3F2FD; border: 2px solid #42A5F5;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span style="font-size: 1.5rem;">🔵</span>
+                                    <strong style="color: #1565C0;">Moderate Confidence — Likely Correct</strong>
+                                </div>
+                            </div>
+
+                            <!-- Raw -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">🔊 Raw Transcription (what ASR heard):</label>
+                                <div class="p-3 rounded" style="background: #FFF3E0; border: 1px solid #FFB300;">
+                                    <span id="upload-raw" class="fw-semibold" style="color: #E65100;"></span>
+                                </div>
+                            </div>
+                            <!-- NLP Repaired -->
+                            <div class="mb-3" id="upload-repaired-box" style="display:none;">
+                                <label class="form-label fw-bold" style="color: #1565C0;">
+                                    🧠 NLP Word Repair:
+                                </label>
+                                <div class="p-3 rounded" style="background: #E3F2FD; border: 1px solid #42A5F5;">
+                                    <span id="upload-repaired" class="fw-semibold" style="color: #0D47A1;"></span>
+                                </div>
+                            </div>
+                            <!-- Cleaned -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold" style="color: var(--success);">
+                                    ✨ Translated (clear text):
+                                </label>
+                                <div class="p-3 rounded" id="upload-clean-box" style="background: #E8F5E9; border: 2px solid var(--success);">
+                                    <span id="upload-clean" class="fw-bold fs-5" style="color: #1B5E20;"></span>
+                                </div>
+                                <div class="mt-1" id="upload-method-box" style="display:none;">
+                                    <span class="badge" style="background: #7C4DFF; color: white;" id="upload-method"></span>
+                                </div>
+                            </div>
+
+                            <!-- Confidence Bar -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted small">Translation Confidence:</label>
+                                <div class="progress" style="height: 26px; border-radius: 13px; background: #eee;">
+                                    <div id="upload-conf-bar" class="progress-bar" role="progressbar"
+                                         style="width: 0%; border-radius: 13px; font-weight: bold; transition: width 0.6s ease;">
+                                        <span id="upload-conf-text" class="small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stats row -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-4">
+                                    <div class="stat-card py-2">
+                                        <div class="stat-value fs-4" id="upload-conf">-</div>
+                                        <div class="stat-label small">Confidence</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-card py-2">
+                                        <div class="stat-value fs-4" id="upload-corrections">-</div>
+                                        <div class="stat-label small">Corrections</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-card py-2">
+                                        <div class="stat-value fs-4" id="upload-reliability-label">-</div>
+                                        <div class="stat-label small">Reliability</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Tips -->
+                            <div class="p-3 rounded mb-3" style="background: #F3E5F5; border: 1px solid #CE93D8;" id="upload-tips-box">
+                                <strong>💡 Speech Tips:</strong>
+                                <span id="upload-tips"></span>
+                            </div>
+                            <!-- Actions -->
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <button class="btn btn-primary-custom" onclick="speakUploadClean()">🔊 Read Aloud</button>
+                                <button class="btn btn-outline-secondary" onclick="copyUploadClean()">📋 Copy Text</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+<script>
+// ============================================================
+//  LIVE MICROPHONE TRANSLATION
+// ============================================================
+let liveSpeech = null;
+let isLiveRecording = false;
+let conversationLog = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    liveSpeech = new SpeechHandler({
+        lang: 'en-US',
+        continuous: false,
+        interimResults: false,
+        maxAlternatives: 5,
+        timeout: 15000
+    });
+});
+
+function toggleLiveRecording() {
+    if (isLiveRecording) {
+        stopLiveRecording();
+    } else {
+        startLiveRecording();
+    }
+}
+
+function startLiveRecording() {
+    if (!liveSpeech) return;
+    isLiveRecording = true;
+
+    const btn = document.getElementById('live-mic-btn');
+    btn.classList.add('listening');
+    document.getElementById('live-status').textContent = '🎤 Listening... Speak now!';
+    document.querySelectorAll('#live-waveform .waveform-bar').forEach(b => b.classList.add('active'));
+
+    liveSpeech.startListening(
+        // onResult
+        (data) => {
+            isLiveRecording = false;
+            btn.classList.remove('listening');
+            document.querySelectorAll('#live-waveform .waveform-bar').forEach(b => b.classList.remove('active'));
+
+            let transcript = '';
+            let alternatives = [];
+
+            if (typeof data === 'string') {
+                transcript = data;
+            } else if (data && typeof data === 'object') {
+                transcript = data.transcript || '';
+                if (Array.isArray(data.alternatives)) {
+                    alternatives = data.alternatives.map(a => typeof a === 'string' ? a : (a.transcript || ''));
+                }
+            }
+
+            document.getElementById('live-status').textContent = '🧠 Translating...';
+            processLiveTranslation(transcript, alternatives);
+        },
+        // onError
+        (error) => {
+            isLiveRecording = false;
+            const btn = document.getElementById('live-mic-btn');
+            btn.classList.remove('listening');
+            document.querySelectorAll('#live-waveform .waveform-bar').forEach(b => b.classList.remove('active'));
+
+            let errMsg = typeof error === 'string' ? error : (error.error || 'unknown');
+            if (errMsg === 'no-speech') {
+                document.getElementById('live-status').textContent = "🤔 Didn't hear anything. Try again!";
+            } else {
+                document.getElementById('live-status').textContent = '⚠️ ' + errMsg + '. Try again.';
+            }
+        },
+        // onEnd
+        () => {
+            isLiveRecording = false;
+            const btn = document.getElementById('live-mic-btn');
+            btn.classList.remove('listening');
+            document.querySelectorAll('#live-waveform .waveform-bar').forEach(b => b.classList.remove('active'));
+        }
+    );
+}
+
+function stopLiveRecording() {
+    if (liveSpeech) liveSpeech.stopListening();
+    isLiveRecording = false;
+    document.getElementById('live-mic-btn').classList.remove('listening');
+    document.querySelectorAll('#live-waveform .waveform-bar').forEach(b => b.classList.remove('active'));
+    document.getElementById('live-status').textContent = 'Tap the microphone to speak again';
+}
+
+async function processLiveTranslation(transcript, alternatives) {
+    try {
+        const res = await fetch('/api/translate/live', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                asr_output: transcript,
+                alternatives: alternatives
+            })
+        });
+        const result = await res.json();
+
+        // Show raw
+        document.getElementById('raw-transcript').textContent = result.raw_text || transcript;
+        document.getElementById('raw-section').style.display = 'block';
+
+        // Show clean
+        document.getElementById('clean-transcript').textContent = result.clean_text || transcript;
+        document.getElementById('clean-section').style.display = 'block';
+
+        // Stats
+        document.getElementById('conf-value').textContent = Math.round((result.confidence || 0) * 100) + '%';
+        document.getElementById('error-count').textContent = result.corrections_made || 0;
+        document.getElementById('severity-value').textContent = result.clarity_label || '-';
+        document.getElementById('analysis-section').style.display = 'block';
+
+        // Tips
+        if (result.tips) {
+            document.getElementById('speech-tips').textContent = result.tips;
+            document.getElementById('tips-section').style.display = 'block';
+        }
+
+        // Actions
+        document.getElementById('action-btns').style.display = 'flex';
+        document.getElementById('action-btns').style.setProperty('display', 'flex', 'important');
+
+        document.getElementById('live-status').textContent = '✅ Translation complete!';
+
+        // Add to history
+        addToHistory(result.raw_text || transcript, result.clean_text || transcript);
+
+        // Continuous mode
+        if (document.getElementById('continuous-mode').checked) {
+            setTimeout(() => startLiveRecording(), 1000);
+        }
+
+    } catch (e) {
+        console.error(e);
+        document.getElementById('live-status').textContent = '⚠️ Error processing. Try again.';
+    }
+}
+
+function addToHistory(raw, clean) {
+    const time = new Date().toLocaleTimeString();
+    conversationLog.push({ time, raw, clean });
+
+    const card = document.getElementById('history-card');
+    card.style.display = 'block';
+
+    const container = document.getElementById('conversation-history');
+    const entry = document.createElement('div');
+    entry.className = 'mb-2 p-2 rounded';
+    entry.style.background = 'var(--bg)';
+    entry.innerHTML = `
+        <small class="text-muted">${time}</small>
+        <div><small class="text-muted">Heard:</small> <em>${raw}</em></div>
+        <div><small style="color: var(--success);">Translated:</small> <strong>${clean}</strong></div>
+    `;
+    container.prepend(entry);
+}
+
+function speakCleanText() {
+    const text = document.getElementById('clean-transcript').textContent;
+    if (!text) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    speechSynthesis.speak(utterance);
+}
+
+function copyCleanText() {
+    const text = document.getElementById('clean-transcript').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        document.getElementById('live-status').textContent = '📋 Copied to clipboard!';
+        setTimeout(() => {
+            document.getElementById('live-status').textContent = 'Tap the microphone to speak again';
+        }, 2000);
+    });
+}
+
+function clearLiveResults() {
+    ['raw-section', 'clean-section', 'analysis-section', 'tips-section'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+    });
+    document.getElementById('action-btns').style.setProperty('display', 'none', 'important');
+    document.getElementById('live-status').textContent = 'Tap the microphone and start speaking';
+}
+
+function copyAllHistory() {
+    const text = conversationLog.map(e => `[${e.time}] ${e.clean}`).join('\n');
+    navigator.clipboard.writeText(text).then(() => alert('Copied all history!'));
+}
+
+function clearHistory() {
+    conversationLog = [];
+    document.getElementById('conversation-history').innerHTML = '';
+    document.getElementById('history-card').style.display = 'none';
+}
+
+// ============================================================
+//  UPLOAD AUDIO TRANSLATION
+// ============================================================
+let selectedFile = null;
+
+function handleDrop(event) {
+    event.preventDefault();
+    event.target.classList.remove('dragover');
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        selectFile(files[0]);
+    }
+}
+
+function handleFileSelect(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        selectFile(files[0]);
+    }
+}
+
+function selectFile(file) {
+    const maxSize = 25 * 1024 * 1024;
+    if (file.size > maxSize) {
+        alert('File too large! Maximum 25 MB.');
+        return;
+    }
+
+    selectedFile = file;
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-size').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+
+    const preview = document.getElementById('audio-preview');
+    preview.src = URL.createObjectURL(file);
+
+    document.getElementById('file-info').style.display = 'block';
+    document.getElementById('translate-btn').disabled = false;
+    document.getElementById('upload-results').style.display = 'none';
+    document.getElementById('upload-status').textContent = '';
+}
+
+async function translateUploadedAudio() {
+    if (!selectedFile) return;
+
+    const btn = document.getElementById('translate-btn');
+    btn.disabled = true;
+    document.getElementById('upload-spinner').style.display = 'inline-block';
+    document.getElementById('upload-status').textContent = 'Processing audio... This may take a moment.';
+    document.getElementById('upload-results').style.display = 'none';
+
+    const formData = new FormData();
+    formData.append('audio', selectedFile);
+
+    try {
+        const res = await fetch('/api/translate/upload', {
+            method: 'POST',
+            body: formData
+        });
+        const result = await res.json();
+
+        if (result.error) {
+            document.getElementById('upload-status').textContent = '⚠️ ' + result.error;
+        } else {
+            document.getElementById('upload-raw').textContent = result.raw_text || '-';
+            document.getElementById('upload-clean').textContent = result.clean_text || '-';
+
+            const conf = result.confidence || 0;
+            const confPct = Math.round(conf * 100);
+            document.getElementById('upload-conf').textContent = confPct + '%';
+            document.getElementById('upload-corrections').textContent = result.corrections_made || 0;
+
+            // --- Confidence bar ---
+            const confBar = document.getElementById('upload-conf-bar');
+            const confText = document.getElementById('upload-conf-text');
+            confBar.style.width = confPct + '%';
+            confText.textContent = confPct + '%';
+            if (conf >= 0.60) {
+                confBar.style.background = 'linear-gradient(90deg, #43A047, #66BB6A)';
+            } else if (conf >= 0.40) {
+                confBar.style.background = 'linear-gradient(90deg, #FB8C00, #FFA726)';
+            } else {
+                confBar.style.background = 'linear-gradient(90deg, #E53935, #EF5350)';
+            }
+
+            // --- Reliability banners ---
+            const reliability = result.reliability || 'low';
+            document.getElementById('upload-reliability-warning').style.display = 'none';
+            document.getElementById('upload-reliability-high').style.display = 'none';
+            document.getElementById('upload-reliability-medium').style.display = 'none';
+
+            const reliabilityLabel = document.getElementById('upload-reliability-label');
+            if (reliability === 'high') {
+                document.getElementById('upload-reliability-high').style.display = 'block';
+                reliabilityLabel.textContent = '🟢 High';
+                reliabilityLabel.style.color = '#2E7D32';
+                // Green border on clean box
+                document.getElementById('upload-clean-box').style.borderColor = '#4CAF50';
+                document.getElementById('upload-clean-box').style.background = '#E8F5E9';
+            } else if (reliability === 'medium') {
+                document.getElementById('upload-reliability-medium').style.display = 'block';
+                reliabilityLabel.textContent = '🔵 Medium';
+                reliabilityLabel.style.color = '#1565C0';
+                document.getElementById('upload-clean-box').style.borderColor = '#42A5F5';
+                document.getElementById('upload-clean-box').style.background = '#E3F2FD';
+            } else {
+                document.getElementById('upload-reliability-warning').style.display = 'block';
+                reliabilityLabel.textContent = '🔴 Low';
+                reliabilityLabel.style.color = '#C62828';
+                // Red border on clean box to warn user
+                document.getElementById('upload-clean-box').style.borderColor = '#EF5350';
+                document.getElementById('upload-clean-box').style.background = '#FFEBEE';
+            }
+
+            // Show NLP repaired text if different from raw
+            if (result.repaired_text && result.repaired_text !== (result.raw_text || '').toLowerCase()) {
+                document.getElementById('upload-repaired').textContent = result.repaired_text;
+                document.getElementById('upload-repaired-box').style.display = 'block';
+            } else {
+                document.getElementById('upload-repaired-box').style.display = 'none';
+            }
+            // Show match method badge
+            if (result.match_method) {
+                const methodLabels = {
+                    'phrase_bank_match': '🎯 Phrase Bank Match',
+                    'word_repair': '🔧 Word-Level Repair',
+                    'none': '—'
+                };
+                document.getElementById('upload-method').textContent =
+                    methodLabels[result.match_method] || result.match_method;
+                document.getElementById('upload-method-box').style.display = 'block';
+            }
+            if (result.tips) {
+                document.getElementById('upload-tips').textContent = result.tips;
+                document.getElementById('upload-tips-box').style.display = 'block';
+            }
+            document.getElementById('upload-results').style.display = 'block';
+            document.getElementById('upload-status').textContent = '✅ Translation complete!';
+        }
+    } catch (e) {
+        console.error(e);
+        document.getElementById('upload-status').textContent = '⚠️ Error processing audio.';
+    }
+
+    btn.disabled = false;
+    document.getElementById('upload-spinner').style.display = 'none';
+}
+
+function speakUploadClean() {
+    const text = document.getElementById('upload-clean').textContent;
+    if (!text) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    speechSynthesis.speak(utterance);
+}
+
+function copyUploadClean() {
+    const text = document.getElementById('upload-clean').textContent;
+    navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+}
+</script>
+
+<style>
+.upload-dropzone {
+    border: 3px dashed var(--primary-light);
+    border-radius: var(--radius);
+    padding: 40px 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--bg);
+}
+.upload-dropzone:hover, .upload-dropzone.dragover {
+    border-color: var(--primary);
+    background: #E8E6FF;
+    transform: scale(1.01);
+}
+</style>
+{% endblock %}

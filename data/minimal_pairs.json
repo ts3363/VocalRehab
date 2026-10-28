@@ -1,0 +1,348 @@
+{
+  "categories": {
+    "voiced_voiceless_stops": {
+      "name": "Voiced vs. Voiceless Stops",
+      "description": "Practice distinguishing between voiced and voiceless stop consonants",
+      "phoneme_targets": ["/b/ vs /p/", "/d/ vs /t/", "/g/ vs /k/"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "bat", "word2": "pat", "hint1": "🦇", "hint2": "👋", "sentence1": "The bat flew at night.", "sentence2": "Pat the dog gently."},
+            {"word1": "big", "word2": "pig", "hint1": "📏", "hint2": "🐷", "sentence1": "That is a big house.", "sentence2": "The pig rolled in mud."},
+            {"word1": "bay", "word2": "pay", "hint1": "🌊", "hint2": "💰", "sentence1": "Ships dock in the bay.", "sentence2": "I need to pay the bill."},
+            {"word1": "dip", "word2": "tip", "hint1": "🫕", "hint2": "💡", "sentence1": "Dip the chip in salsa.", "sentence2": "Here is a helpful tip."},
+            {"word1": "dot", "word2": "tot", "hint1": "⚫", "hint2": "👶", "sentence1": "Draw a small dot.", "sentence2": "The tot played happily."},
+            {"word1": "game", "word2": "came", "hint1": "🎮", "hint2": "🚶", "sentence1": "Let's play a game.", "sentence2": "She came to the party."},
+            {"word1": "gap", "word2": "cap", "hint1": "🕳️", "hint2": "🧢", "sentence1": "Mind the gap.", "sentence2": "Wear your cap outside."},
+            {"word1": "goal", "word2": "coal", "hint1": "⚽", "hint2": "⬛", "sentence1": "He scored a goal.", "sentence2": "Coal burns for warmth."}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "back", "word2": "pack", "hint1": "🔙", "hint2": "🎒", "sentence1": "Step back slowly.", "sentence2": "Pack your bag for the trip."},
+            {"word1": "bill", "word2": "pill", "hint1": "🧾", "hint2": "💊", "sentence1": "The bill arrived today.", "sentence2": "Take this pill with water."},
+            {"word1": "ban", "word2": "pan", "hint1": "🚫", "hint2": "🍳", "sentence1": "They decided to ban it.", "sentence2": "Heat the pan on the stove."},
+            {"word1": "dense", "word2": "tense", "hint1": "🌫️", "hint2": "😰", "sentence1": "The forest is dense.", "sentence2": "He felt tense before the test."},
+            {"word1": "dime", "word2": "time", "hint1": "🪙", "hint2": "⏰", "sentence1": "I found a dime.", "sentence2": "What time is it now?"},
+            {"word1": "gold", "word2": "cold", "hint1": "🥇", "hint2": "🥶", "sentence1": "She won a gold medal.", "sentence2": "The water is very cold."},
+            {"word1": "gale", "word2": "kale", "hint1": "🌬️", "hint2": "🥬", "sentence1": "A strong gale blew.", "sentence2": "Kale is very healthy."},
+            {"word1": "buzz", "word2": "bus", "hint1": "🐝", "hint2": "🚌", "sentence1": "I hear a buzz.", "sentence2": "Wait for the bus."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "rabid", "word2": "rapid", "hint1": "🦊", "hint2": "⚡", "sentence1": "A rabid animal is dangerous.", "sentence2": "The rapid train arrived."},
+            {"word1": "cabbage", "word2": "capped", "hint1": "🥬", "hint2": "🧢", "sentence1": "We grew cabbage.", "sentence2": "The bottle is capped."},
+            {"word1": "medal", "word2": "metal", "hint1": "🏅", "hint2": "⚙️", "sentence1": "She earned a medal.", "sentence2": "That is made of metal."},
+            {"word1": "padding", "word2": "patting", "hint1": "🛋️", "hint2": "🤚", "sentence1": "Add padding for comfort.", "sentence2": "She was patting the cat."},
+            {"word1": "badger", "word2": "patcher", "hint1": "🦡", "hint2": "🧵", "sentence1": "The badger dug a hole.", "sentence2": "The patcher fixed the tire."},
+            {"word1": "bigger", "word2": "picker", "hint1": "📐", "hint2": "🍒", "sentence1": "This one is bigger.", "sentence2": "She is a fast picker."},
+            {"word1": "dagger", "word2": "tagger", "hint1": "🗡️", "hint2": "🏷️", "sentence1": "A dagger is sharp.", "sentence2": "The tagger labeled items."},
+            {"word1": "guarding", "word2": "carting", "hint1": "🛡️", "hint2": "🛒", "sentence1": "He is guarding the door.", "sentence2": "They are carting supplies."}
+          ]
+        }
+      }
+    },
+    "fricatives": {
+      "name": "Fricative Contrasts",
+      "description": "Practice fricative sounds that require precise airflow control",
+      "phoneme_targets": ["/f/ vs /v/", "/s/ vs /z/", "/sh/ vs /ch/"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "fan", "word2": "van", "hint1": "🌀", "hint2": "🚐", "sentence1": "Turn on the fan.", "sentence2": "Drive the van carefully."},
+            {"word1": "fine", "word2": "vine", "hint1": "👌", "hint2": "🌿", "sentence1": "I feel fine today.", "sentence2": "The vine grew up the wall."},
+            {"word1": "sip", "word2": "zip", "hint1": "☕", "hint2": "🤐", "sentence1": "Take a small sip.", "sentence2": "Zip up your jacket."},
+            {"word1": "sue", "word2": "zoo", "hint1": "⚖️", "hint2": "🦁", "sentence1": "She decided to sue.", "sentence2": "Let's visit the zoo."},
+            {"word1": "sap", "word2": "zap", "hint1": "🌳", "hint2": "⚡", "sentence1": "Trees produce sap.", "sentence2": "Zap it with lightning."},
+            {"word1": "ship", "word2": "chip", "hint1": "🚢", "hint2": "🍟", "sentence1": "The ship sailed away.", "sentence2": "I ate a potato chip."},
+            {"word1": "shoe", "word2": "chew", "hint1": "👟", "hint2": "🦷", "sentence1": "Put on your shoe.", "sentence2": "Chew your food well."},
+            {"word1": "share", "word2": "chair", "hint1": "🤝", "hint2": "🪑", "sentence1": "Let's share the cake.", "sentence2": "Sit in the chair."}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "leaf", "word2": "leave", "hint1": "🍃", "hint2": "🚪", "sentence1": "A leaf fell down.", "sentence2": "Please don't leave yet."},
+            {"word1": "safe", "word2": "save", "hint1": "🔒", "hint2": "💾", "sentence1": "Keep the money safe.", "sentence2": "Save the document now."},
+            {"word1": "seal", "word2": "zeal", "hint1": "🦭", "hint2": "🔥", "sentence1": "A seal swam by.", "sentence2": "She works with zeal."},
+            {"word1": "foul", "word2": "vowel", "hint1": "😤", "hint2": "🔤", "sentence1": "That was a foul play.", "sentence2": "A is a vowel."},
+            {"word1": "face", "word2": "vase", "hint1": "😊", "hint2": "🏺", "sentence1": "She has a kind face.", "sentence2": "Put flowers in the vase."},
+            {"word1": "lice", "word2": "lies", "hint1": "🐛", "hint2": "🤥", "sentence1": "Check for head lice.", "sentence2": "He never tells lies."},
+            {"word1": "wash", "word2": "watch", "hint1": "🧼", "hint2": "⌚", "sentence1": "Wash your hands well.", "sentence2": "Check your watch."},
+            {"word1": "mash", "word2": "match", "hint1": "🥔", "hint2": "🔥", "sentence1": "Mash the potatoes.", "sentence2": "Light the match."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "refusing", "word2": "reviewing", "hint1": "🚫", "hint2": "📝", "sentence1": "She is refusing the offer.", "sentence2": "He is reviewing the report."},
+            {"word1": "sufficient", "word2": "efficient", "hint1": "✅", "hint2": "⚡", "sentence1": "This amount is sufficient.", "sentence2": "The process is efficient."},
+            {"word1": "fission", "word2": "vision", "hint1": "⚛️", "hint2": "👁️", "sentence1": "Nuclear fission releases energy.", "sentence2": "She has great vision."},
+            {"word1": "pressure", "word2": "treasure", "hint1": "🫨", "hint2": "💎", "sentence1": "Don't feel any pressure.", "sentence2": "We found hidden treasure."},
+            {"word1": "lacing", "word2": "lazing", "hint1": "👟", "hint2": "😴", "sentence1": "She is lacing her boots.", "sentence2": "He is lazing around."},
+            {"word1": "missing", "word2": "misting", "hint1": "❓", "hint2": "🌫️", "sentence1": "The key is missing.", "sentence2": "It was misting outside."},
+            {"word1": "fishing", "word2": "fitting", "hint1": "🎣", "hint2": "👗", "sentence1": "He went fishing.", "sentence2": "The fitting took an hour."},
+            {"word1": "wishing", "word2": "witching", "hint1": "🌟", "hint2": "🧙", "sentence1": "She kept wishing.", "sentence2": "The witching hour arrived."}
+          ]
+        }
+      }
+    },
+    "vowel_tense_lax": {
+      "name": "Vowel Length Contrasts",
+      "description": "Practice distinguishing between tense (long) and lax (short) vowels",
+      "phoneme_targets": ["/iː/ vs /ɪ/", "/uː/ vs /ʊ/", "/ɑː/ vs /æ/"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "sheep", "word2": "ship", "hint1": "🐑", "hint2": "🚢", "sentence1": "The sheep is fluffy.", "sentence2": "A ship crossed the ocean."},
+            {"word1": "beat", "word2": "bit", "hint1": "🥁", "hint2": "🔢", "sentence1": "Beat the drum.", "sentence2": "A tiny bit of sugar."},
+            {"word1": "feet", "word2": "fit", "hint1": "🦶", "hint2": "💪", "sentence1": "My feet are tired.", "sentence2": "Stay fit and healthy."},
+            {"word1": "pool", "word2": "pull", "hint1": "🏊", "hint2": "🤚", "sentence1": "Swim in the pool.", "sentence2": "Pull the door open."},
+            {"word1": "fool", "word2": "full", "hint1": "🤡", "hint2": "🥤", "sentence1": "Don't be a fool.", "sentence2": "The cup is full."},
+            {"word1": "heat", "word2": "hit", "hint1": "🔥", "hint2": "👊", "sentence1": "The heat is strong.", "sentence2": "He hit the ball."},
+            {"word1": "bean", "word2": "bin", "hint1": "🫘", "hint2": "🗑️", "sentence1": "Cook the bean.", "sentence2": "Throw it in the bin."},
+            {"word1": "peel", "word2": "pill", "hint1": "🍌", "hint2": "💊", "sentence1": "Peel the banana.", "sentence2": "Take this pill now."}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "least", "word2": "list", "hint1": "📉", "hint2": "📋", "sentence1": "At least try once.", "sentence2": "Write it on the list."},
+            {"word1": "leave", "word2": "live", "hint1": "🚪", "hint2": "🏠", "sentence1": "Time to leave now.", "sentence2": "I live near the park."},
+            {"word1": "Luke", "word2": "look", "hint1": "🧑", "hint2": "👀", "sentence1": "Luke is my friend.", "sentence2": "Look at the stars."},
+            {"word1": "peak", "word2": "pick", "hint1": "⛰️", "hint2": "☝️", "sentence1": "Climb to the peak.", "sentence2": "Pick the red one."},
+            {"word1": "keen", "word2": "kin", "hint1": "🤓", "hint2": "👨‍👩‍👧", "sentence1": "She is keen to learn.", "sentence2": "Visit your kin often."},
+            {"word1": "heel", "word2": "hill", "hint1": "👠", "hint2": "⛰️", "sentence1": "She broke her heel.", "sentence2": "Walk up the hill."},
+            {"word1": "wheel", "word2": "will", "hint1": "☸️", "hint2": "📜", "sentence1": "Turn the wheel.", "sentence2": "She will come back."},
+            {"word1": "seep", "word2": "sip", "hint1": "💧", "hint2": "☕", "sentence1": "Water began to seep.", "sentence2": "Sip the tea slowly."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "feeling", "word2": "filling", "hint1": "❤️", "hint2": "🥧", "sentence1": "I have a good feeling.", "sentence2": "The pie filling is sweet."},
+            {"word1": "seeking", "word2": "sicking", "hint1": "🔍", "hint2": "😷", "sentence1": "She is seeking answers.", "sentence2": "The smell was sicking."},
+            {"word1": "sleeping", "word2": "slipping", "hint1": "😴", "hint2": "🧊", "sentence1": "The baby is sleeping.", "sentence2": "Be careful, it is slipping."},
+            {"word1": "heating", "word2": "hitting", "hint1": "🔥", "hint2": "🏏", "sentence1": "The heating is working.", "sentence2": "He is hitting the ball."},
+            {"word1": "peeling", "word2": "piling", "hint1": "🍎", "hint2": "📚", "sentence1": "She is peeling apples.", "sentence2": "Papers are piling up."},
+            {"word1": "meaning", "word2": "minting", "hint1": "💭", "hint2": "🪙", "sentence1": "What is the meaning?", "sentence2": "They are minting coins."},
+            {"word1": "stealing", "word2": "stilling", "hint1": "🦹", "hint2": "🤫", "sentence1": "No one is stealing.", "sentence2": "The air was stilling."},
+            {"word1": "reaching", "word2": "riching", "hint1": "🤚", "hint2": "💰", "sentence1": "She is reaching for it.", "sentence2": "The soil is enriching."}
+          ]
+        }
+      }
+    },
+    "initial_consonants": {
+      "name": "Initial Consonant Contrasts",
+      "description": "Practice varied initial consonant distinctions",
+      "phoneme_targets": ["/m/ vs /n/", "/w/ vs /r/", "/s/ vs /th/"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "map", "word2": "nap", "hint1": "🗺️", "hint2": "😴", "sentence1": "Read the map.", "sentence2": "Take a short nap."},
+            {"word1": "mice", "word2": "nice", "hint1": "🐭", "hint2": "😊", "sentence1": "The mice ate cheese.", "sentence2": "That's very nice."},
+            {"word1": "wine", "word2": "rhine", "hint1": "🍷", "hint2": "🏞️", "sentence1": "Pour some wine.", "sentence2": "The Rhine is a river."},
+            {"word1": "wet", "word2": "red", "hint1": "💧", "hint2": "🔴", "sentence1": "The floor is wet.", "sentence2": "The apple is red."},
+            {"word1": "sing", "word2": "thing", "hint1": "🎤", "hint2": "📦", "sentence1": "Let's sing a song.", "sentence2": "This thing is heavy."},
+            {"word1": "sick", "word2": "thick", "hint1": "🤒", "hint2": "📏", "sentence1": "He is feeling sick.", "sentence2": "The wall is thick."},
+            {"word1": "sum", "word2": "thumb", "hint1": "➕", "hint2": "👍", "sentence1": "Find the sum.", "sentence2": "She hurt her thumb."},
+            {"word1": "mat", "word2": "nat", "hint1": "🧹", "hint2": "🧑", "sentence1": "Wipe on the mat.", "sentence2": "Nat is a name."}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "mail", "word2": "nail", "hint1": "📧", "hint2": "🔨", "sentence1": "Check your mail.", "sentence2": "Hammer the nail."},
+            {"word1": "mow", "word2": "know", "hint1": "🌿", "hint2": "🧠", "sentence1": "Mow the grass.", "sentence2": "I know the answer."},
+            {"word1": "wing", "word2": "ring", "hint1": "🦅", "hint2": "💍", "sentence1": "The bird hurt its wing.", "sentence2": "She wore a gold ring."},
+            {"word1": "weed", "word2": "read", "hint1": "🌱", "hint2": "📖", "sentence1": "Pull the weed out.", "sentence2": "Read a good book."},
+            {"word1": "sink", "word2": "think", "hint1": "🚰", "hint2": "🤔", "sentence1": "Wash in the sink.", "sentence2": "Think about it."},
+            {"word1": "saw", "word2": "thaw", "hint1": "🪚", "hint2": "❄️", "sentence1": "He used a saw.", "sentence2": "Let the ice thaw."},
+            {"word1": "moss", "word2": "nods", "hint1": "🌿", "hint2": "😌", "sentence1": "Moss covers the rocks.", "sentence2": "She nods in agreement."},
+            {"word1": "wake", "word2": "rake", "hint1": "⏰", "hint2": "🍂", "sentence1": "Time to wake up.", "sentence2": "Rake the fallen leaves."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "morning", "word2": "nothing", "hint1": "🌅", "hint2": "0️⃣", "sentence1": "Good morning everyone.", "sentence2": "There is nothing here."},
+            {"word1": "winning", "word2": "ringing", "hint1": "🏆", "hint2": "🔔", "sentence1": "She keeps winning.", "sentence2": "The phone is ringing."},
+            {"word1": "sinking", "word2": "thinking", "hint1": "🚢", "hint2": "💭", "sentence1": "The boat is sinking.", "sentence2": "He is thinking hard."},
+            {"word1": "mopping", "word2": "napping", "hint1": "🧹", "hint2": "💤", "sentence1": "She is mopping.", "sentence2": "The cat is napping."},
+            {"word1": "winding", "word2": "riding", "hint1": "🌀", "hint2": "🏇", "sentence1": "The path is winding.", "sentence2": "She enjoys riding."},
+            {"word1": "walking", "word2": "rocking", "hint1": "🚶", "hint2": "🎸", "sentence1": "We are walking home.", "sentence2": "The chair is rocking."},
+            {"word1": "sipping", "word2": "tipping", "hint1": "☕", "hint2": "💰", "sentence1": "She is sipping coffee.", "sentence2": "Tipping is optional."},
+            {"word1": "marking", "word2": "narking", "hint1": "✏️", "hint2": "😤", "sentence1": "The teacher is marking.", "sentence2": "Stop narking on me."}
+          ]
+        }
+      }
+    },
+    "final_consonants": {
+      "name": "Final Consonant Contrasts",
+      "description": "Practice final consonant sounds - critical for dysarthric speakers who drop endings",
+      "phoneme_targets": ["final /d/ vs /t/", "final /b/ vs /p/", "final /g/ vs /k/"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "bad", "word2": "bat", "hint1": "👎", "hint2": "🦇", "sentence1": "That was bad.", "sentence2": "A bat flew past."},
+            {"word1": "bed", "word2": "bet", "hint1": "🛏️", "hint2": "🎰", "sentence1": "Go to bed now.", "sentence2": "I bet you can do it."},
+            {"word1": "mad", "word2": "mat", "hint1": "😡", "hint2": "🧹", "sentence1": "Don't be mad.", "sentence2": "Clean the mat."},
+            {"word1": "cab", "word2": "cap", "hint1": "🚕", "hint2": "🧢", "sentence1": "Call a cab.", "sentence2": "Wear a cap."},
+            {"word1": "rib", "word2": "rip", "hint1": "🦴", "hint2": "📃", "sentence1": "She bruised a rib.", "sentence2": "Don't rip the paper."},
+            {"word1": "bag", "word2": "back", "hint1": "👜", "hint2": "🔙", "sentence1": "Carry the bag.", "sentence2": "Come back soon."},
+            {"word1": "bug", "word2": "buck", "hint1": "🐛", "hint2": "🦌", "sentence1": "I saw a bug.", "sentence2": "A buck ran past."},
+            {"word1": "mug", "word2": "muck", "hint1": "☕", "hint2": "💩", "sentence1": "Fill the mug.", "sentence2": "Clean up the muck."}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "road", "word2": "wrote", "hint1": "🛣️", "hint2": "✏️", "sentence1": "Cross the road.", "sentence2": "She wrote a letter."},
+            {"word1": "seed", "word2": "seat", "hint1": "🌱", "hint2": "💺", "sentence1": "Plant the seed.", "sentence2": "Find your seat."},
+            {"word1": "feed", "word2": "feet", "hint1": "🍼", "hint2": "🦶", "sentence1": "Time to feed the cat.", "sentence2": "My feet are cold."},
+            {"word1": "robe", "word2": "rope", "hint1": "👘", "hint2": "🪢", "sentence1": "Wear a warm robe.", "sentence2": "Hold the rope tight."},
+            {"word1": "tab", "word2": "tap", "hint1": "📑", "hint2": "🚰", "sentence1": "Open a new tab.", "sentence2": "Turn the tap off."},
+            {"word1": "tag", "word2": "tack", "hint1": "🏷️", "hint2": "📌", "sentence1": "Read the tag.", "sentence2": "Use a tack to pin it."},
+            {"word1": "pig", "word2": "pick", "hint1": "🐷", "hint2": "☝️", "sentence1": "The pig is muddy.", "sentence2": "Pick the right one."},
+            {"word1": "rug", "word2": "ruck", "hint1": "🧶", "hint2": "🎒", "sentence1": "The rug is soft.", "sentence2": "Pack the ruck."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "grabbed", "word2": "graft", "hint1": "✊", "hint2": "🌳", "sentence1": "She grabbed the ball.", "sentence2": "Graft the plant branch."},
+            {"word1": "bragged", "word2": "bracket", "hint1": "🗣️", "hint2": "📐", "sentence1": "He bragged about it.", "sentence2": "Use a bracket here."},
+            {"word1": "ribbed", "word2": "ripped", "hint1": "🧵", "hint2": "💪", "sentence1": "The fabric is ribbed.", "sentence2": "The paper got ripped."},
+            {"word1": "robbed", "word2": "rocked", "hint1": "🦹", "hint2": "🎸", "sentence1": "The store was robbed.", "sentence2": "She rocked the baby."},
+            {"word1": "hugged", "word2": "husked", "hint1": "🤗", "hint2": "🌽", "sentence1": "They hugged tightly.", "sentence2": "She husked the corn."},
+            {"word1": "dragged", "word2": "tracked", "hint1": "🏋️", "hint2": "👣", "sentence1": "He dragged the box.", "sentence2": "She tracked the package."},
+            {"word1": "begged", "word2": "becked", "hint1": "🙏", "hint2": "👋", "sentence1": "He begged for help.", "sentence2": "She becked him over."},
+            {"word1": "lagged", "word2": "lacked", "hint1": "🐢", "hint2": "❌", "sentence1": "The game lagged.", "sentence2": "He lacked confidence."}
+          ]
+        }
+      }
+    },
+    "consonant_clusters": {
+      "name": "Consonant Clusters",
+      "description": "Practice consonant clusters vs. simplified forms - common challenge in dysarthria",
+      "phoneme_targets": ["initial clusters", "final clusters"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "play", "word2": "pay", "hint1": "🎮", "hint2": "💰", "sentence1": "Let's play a game.", "sentence2": "Time to pay the bill."},
+            {"word1": "stop", "word2": "top", "hint1": "🛑", "hint2": "🔝", "sentence1": "Stop right there.", "sentence2": "Go to the top."},
+            {"word1": "swim", "word2": "sim", "hint1": "🏊", "hint2": "📱", "sentence1": "Let's go swim.", "sentence2": "Insert the SIM card."},
+            {"word1": "flag", "word2": "fag", "hint1": "🏳️", "hint2": "🚬", "sentence1": "Wave the flag.", "sentence2": "A fag end remained."},
+            {"word1": "crow", "word2": "row", "hint1": "🐦‍⬛", "hint2": "🚣", "sentence1": "The crow called.", "sentence2": "Row the boat."},
+            {"word1": "glow", "word2": "go", "hint1": "✨", "hint2": "🚶", "sentence1": "Watch the glow.", "sentence2": "Time to go home."},
+            {"word1": "tree", "word2": "tea", "hint1": "🌳", "hint2": "🍵", "sentence1": "Climb the tree.", "sentence2": "Drink some tea."},
+            {"word1": "slow", "word2": "so", "hint1": "🐌", "hint2": "➡️", "sentence1": "Go slow.", "sentence2": "So what next?"}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "blend", "word2": "bend", "hint1": "🎨", "hint2": "↩️", "sentence1": "Blend the colors.", "sentence2": "Bend your knee."},
+            {"word1": "clap", "word2": "cap", "hint1": "👏", "hint2": "🧢", "sentence1": "Clap your hands.", "sentence2": "Put on the cap."},
+            {"word1": "grape", "word2": "gape", "hint1": "🍇", "hint2": "😮", "sentence1": "Eat a grape.", "sentence2": "Don't gape at people."},
+            {"word1": "train", "word2": "rain", "hint1": "🚂", "hint2": "🌧️", "sentence1": "Catch the train.", "sentence2": "Rain is coming."},
+            {"word1": "stamp", "word2": "samp", "hint1": "📮", "hint2": "🌽", "sentence1": "Put a stamp on it.", "sentence2": "Cook some samp."},
+            {"word1": "brand", "word2": "band", "hint1": "™️", "hint2": "🎵", "sentence1": "A famous brand.", "sentence2": "Join the band."},
+            {"word1": "trust", "word2": "rust", "hint1": "🤝", "hint2": "🔧", "sentence1": "You can trust me.", "sentence2": "The gate has rust."},
+            {"word1": "slide", "word2": "side", "hint1": "🛝", "hint2": "➡️", "sentence1": "Go down the slide.", "sentence2": "Stand to the side."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "splashing", "word2": "slashing", "hint1": "💦", "hint2": "🗡️", "sentence1": "Kids are splashing.", "sentence2": "He is slashing prices."},
+            {"word1": "strength", "word2": "length", "hint1": "💪", "hint2": "📏", "sentence1": "Build your strength.", "sentence2": "Measure the length."},
+            {"word1": "straining", "word2": "raining", "hint1": "😤", "hint2": "🌧️", "sentence1": "Stop straining yourself.", "sentence2": "It is raining hard."},
+            {"word1": "sprinting", "word2": "printing", "hint1": "🏃", "hint2": "🖨️", "sentence1": "She is sprinting fast.", "sentence2": "The printer is printing."},
+            {"word1": "scrambling", "word2": "rambling", "hint1": "🧗", "hint2": "🗣️", "sentence1": "They are scrambling up.", "sentence2": "He is rambling again."},
+            {"word1": "streaming", "word2": "teaming", "hint1": "📺", "hint2": "🤝", "sentence1": "We are streaming.", "sentence2": "They are teaming up."},
+            {"word1": "crisping", "word2": "gripping", "hint1": "🥓", "hint2": "✊", "sentence1": "The bacon is crisping.", "sentence2": "She is gripping tight."},
+            {"word1": "blending", "word2": "bending", "hint1": "🎨", "hint2": "🔄", "sentence1": "She is blending paints.", "sentence2": "He is bending metal."}
+          ]
+        }
+      }
+    },
+    "liquid_glide": {
+      "name": "Liquid & Glide Contrasts",
+      "description": "Practice /r/ vs /l/ and /w/ vs /y/ distinctions",
+      "phoneme_targets": ["/r/ vs /l/", "/w/ vs /y/"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "right", "word2": "light", "hint1": "➡️", "hint2": "💡", "sentence1": "Turn right here.", "sentence2": "Turn on the light."},
+            {"word1": "red", "word2": "led", "hint1": "🔴", "hint2": "👣", "sentence1": "The ball is red.", "sentence2": "She led the way."},
+            {"word1": "rock", "word2": "lock", "hint1": "🪨", "hint2": "🔒", "sentence1": "Climb the rock.", "sentence2": "Lock the door."},
+            {"word1": "rice", "word2": "lice", "hint1": "🍚", "hint2": "🐛", "sentence1": "Cook some rice.", "sentence2": "Check for lice."},
+            {"word1": "wet", "word2": "yet", "hint1": "💧", "hint2": "⏳", "sentence1": "The paint is wet.", "sentence2": "Not ready yet."},
+            {"word1": "wig", "word2": "jig", "hint1": "🧑‍🦱", "hint2": "💃", "sentence1": "She wore a wig.", "sentence2": "Dance a jig."},
+            {"word1": "row", "word2": "low", "hint1": "🚣", "hint2": "⬇️", "sentence1": "Row the boat.", "sentence2": "Fly low."},
+            {"word1": "rain", "word2": "lane", "hint1": "🌧️", "hint2": "🛣️", "sentence1": "Rain is falling.", "sentence2": "Stay in your lane."}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "wrong", "word2": "long", "hint1": "❌", "hint2": "📏", "sentence1": "That answer is wrong.", "sentence2": "The road is long."},
+            {"word1": "rake", "word2": "lake", "hint1": "🍂", "hint2": "🏞️", "sentence1": "Use the rake.", "sentence2": "Swim in the lake."},
+            {"word1": "rate", "word2": "late", "hint1": "📊", "hint2": "⏰", "sentence1": "Rate this movie.", "sentence2": "Don't be late."},
+            {"word1": "ramp", "word2": "lamp", "hint1": "📐", "hint2": "🪔", "sentence1": "Use the ramp.", "sentence2": "Turn on the lamp."},
+            {"word1": "roar", "word2": "lore", "hint1": "🦁", "hint2": "📚", "sentence1": "Hear the lion roar.", "sentence2": "Ancient lore is fascinating."},
+            {"word1": "woke", "word2": "yoke", "hint1": "☀️", "hint2": "🥚", "sentence1": "She just woke up.", "sentence2": "Break the egg yoke."},
+            {"word1": "wax", "word2": "yaks", "hint1": "🕯️", "hint2": "🦬", "sentence1": "Melt the wax.", "sentence2": "Yaks live in mountains."},
+            {"word1": "wear", "word2": "year", "hint1": "👕", "hint2": "📅", "sentence1": "Wear something warm.", "sentence2": "This year is great."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "rolling", "word2": "lolling", "hint1": "🎳", "hint2": "😛", "sentence1": "The ball is rolling.", "sentence2": "The tongue was lolling."},
+            {"word1": "reading", "word2": "leading", "hint1": "📖", "hint2": "👑", "sentence1": "She is reading aloud.", "sentence2": "He is leading the team."},
+            {"word1": "resting", "word2": "listing", "hint1": "😌", "hint2": "📝", "sentence1": "She is resting now.", "sentence2": "He is listing items."},
+            {"word1": "running", "word2": "lunging", "hint1": "🏃", "hint2": "🤺", "sentence1": "He is running fast.", "sentence2": "She is lunging forward."},
+            {"word1": "wrapping", "word2": "lapping", "hint1": "🎁", "hint2": "🐱", "sentence1": "She is wrapping a gift.", "sentence2": "The cat is lapping milk."},
+            {"word1": "roaming", "word2": "loaming", "hint1": "🚶", "hint2": "🌾", "sentence1": "He is roaming around.", "sentence2": "The soil is loaming."},
+            {"word1": "welling", "word2": "yelling", "hint1": "💧", "hint2": "🗣️", "sentence1": "Tears are welling up.", "sentence2": "Stop yelling please."},
+            {"word1": "winner", "word2": "dinner", "hint1": "🏆", "hint2": "🍽️", "sentence1": "She is the winner.", "sentence2": "Time for dinner."}
+          ]
+        }
+      }
+    },
+    "nasals": {
+      "name": "Nasal Contrasts",
+      "description": "Practice distinguishing nasal consonants",
+      "phoneme_targets": ["/m/ vs /n/", "/n/ vs /ŋ/"],
+      "difficulty_levels": {
+        "1": {
+          "pairs": [
+            {"word1": "some", "word2": "sun", "hint1": "🔢", "hint2": "☀️", "sentence1": "Give me some water.", "sentence2": "The sun is shining."},
+            {"word1": "gum", "word2": "gun", "hint1": "🫧", "hint2": "🔫", "sentence1": "Chew some gum.", "sentence2": "A water gun is fun."},
+            {"word1": "rum", "word2": "run", "hint1": "🥃", "hint2": "🏃", "sentence1": "A bottle of rum.", "sentence2": "Let's go for a run."},
+            {"word1": "thin", "word2": "thing", "hint1": "📏", "hint2": "📦", "sentence1": "The paper is thin.", "sentence2": "That thing is large."},
+            {"word1": "win", "word2": "wing", "hint1": "🏆", "hint2": "🦅", "sentence1": "We will win.", "sentence2": "A bird has a wing."},
+            {"word1": "sin", "word2": "sing", "hint1": "😈", "hint2": "🎤", "sentence1": "It's not a sin.", "sentence2": "Let's sing a song."},
+            {"word1": "ham", "word2": "han", "hint1": "🥩", "hint2": "✋", "sentence1": "Slice the ham.", "sentence2": "Han is a name."},
+            {"word1": "rim", "word2": "rin", "hint1": "🏀", "hint2": "🧑", "sentence1": "The cup's rim.", "sentence2": "Rin smiled."}
+          ]
+        },
+        "2": {
+          "pairs": [
+            {"word1": "same", "word2": "sane", "hint1": "🟰", "hint2": "🧠", "sentence1": "We are the same.", "sentence2": "He is perfectly sane."},
+            {"word1": "team", "word2": "teen", "hint1": "🤝", "hint2": "🧑‍🎓", "sentence1": "Join the team.", "sentence2": "She is a teen now."},
+            {"word1": "warm", "word2": "warn", "hint1": "☀️", "hint2": "⚠️", "sentence1": "Stay warm.", "sentence2": "I must warn you."},
+            {"word1": "ban", "word2": "bang", "hint1": "🚫", "hint2": "💥", "sentence1": "A smoking ban.", "sentence2": "A loud bang."},
+            {"word1": "ran", "word2": "rang", "hint1": "🏃", "hint2": "🔔", "sentence1": "She ran away.", "sentence2": "The bell rang."},
+            {"word1": "pan", "word2": "pang", "hint1": "🍳", "hint2": "💔", "sentence1": "Heat the pan.", "sentence2": "A pang of guilt."},
+            {"word1": "dime", "word2": "dine", "hint1": "🪙", "hint2": "🍽️", "sentence1": "I found a dime.", "sentence2": "Let's dine out tonight."},
+            {"word1": "lime", "word2": "line", "hint1": "🍋", "hint2": "📏", "sentence1": "Squeeze the lime.", "sentence2": "Draw a straight line."}
+          ]
+        },
+        "3": {
+          "pairs": [
+            {"word1": "swimming", "word2": "spinning", "hint1": "🏊", "hint2": "🌀", "sentence1": "She is swimming.", "sentence2": "The wheel is spinning."},
+            {"word1": "gaming", "word2": "gaining", "hint1": "🎮", "hint2": "📈", "sentence1": "He enjoys gaming.", "sentence2": "She is gaining strength."},
+            {"word1": "timing", "word2": "tiling", "hint1": "⏱️", "hint2": "🧱", "sentence1": "The timing is perfect.", "sentence2": "We are tiling the floor."},
+            {"word1": "banning", "word2": "banging", "hint1": "🚫", "hint2": "🔨", "sentence1": "They are banning it.", "sentence2": "Someone is banging."},
+            {"word1": "running", "word2": "rung", "hint1": "🏃", "hint2": "🔔", "sentence1": "She loves running.", "sentence2": "The bell has rung."},
+            {"word1": "pinning", "word2": "pinging", "hint1": "📌", "hint2": "📱", "sentence1": "She is pinning photos.", "sentence2": "My phone keeps pinging."},
+            {"word1": "humming", "word2": "hunting", "hint1": "🎶", "hint2": "🏹", "sentence1": "She is humming a tune.", "sentence2": "They went hunting."},
+            {"word1": "coming", "word2": "cunning", "hint1": "🚶", "hint2": "🦊", "sentence1": "She is coming now.", "sentence2": "The fox is cunning."}
+          ]
+        }
+      }
+    }
+  }
+}

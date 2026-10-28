@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Progress — VocalRehab{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h2>📊 Your Progress Dashboard</h2>
+        <p class="text-muted">
+            {% if user %}Welcome back, <strong>{{ user.display_name }}</strong>! Here's how you're doing.{% endif %}
+        </p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.total_sessions }}</div>
+                <div class="stat-label">Sessions</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.lifetime_score }}</div>
+                <div class="stat-label">Total Score</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.best_streak }}</div>
+                <div class="stat-label">Best Streak 🔥</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-value">{{ "%.0f"|format(stats.overall_accuracy * 100) }}%</div>
+                <div class="stat-label">Overall Accuracy</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <!-- Accuracy Over Time -->
+        <div class="col-md-8">
+            <div class="chart-container">
+                <h5>📈 Accuracy Over Time</h5>
+                <canvas id="accuracyChart" height="200"></canvas>
+            </div>
+        </div>
+        <!-- Accuracy by Category -->
+        <div class="col-md-4">
+            <div class="chart-container">
+                <h5>🎯 By Category</h5>
+                <canvas id="categoryChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Weak Areas -->
+        <div class="col-md-6">
+            <div class="card-custom p-4">
+                <h5>⚠️ Areas to Practice</h5>
+                {% if weak_phonemes %}
+                    {% for wp in weak_phonemes %}
+                    <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background: var(--bg);">
+                        <span class="fw-bold">{{ wp.category | replace('_', ' ') | title }}</span>
+                        <div>
+                            <span class="badge {% if wp.accuracy < 0.3 %}badge-weak{% elif wp.accuracy < 0.5 %}badge-moderate{% else %}badge-strong{% endif %} rounded-pill">
+                                {{ "%.0f"|format(wp.accuracy * 100) }}%
+                            </span>
+                            <small class="text-muted ms-1">({{ wp.trials }} trials)</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No weak areas yet — keep practicing to gather data! 💪</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="col-md-6">
+            <div class="card-custom p-4">
+                <h5>🏆 Achievements</h5>
+                <div class="d-flex flex-wrap">
+                    <div class="achievement-badge {{ 'unlocked' if stats.total_sessions >= 1 else 'locked' }}">
+                        🎮 First Session
+                    </div>
+                    <div class="achievement-badge {{ 'unlocked' if stats.best_streak >= 5 else 'locked' }}">
+                        🔥 5-Streak
+                    </div>
+                    <div class="achievement-badge {{ 'unlocked' if stats.best_streak >= 10 else 'locked' }}">
+                        ⚡ 10-Streak
+                    </div>
+                    <div class="achievement-badge {{ 'unlocked' if stats.overall_accuracy >= 0.8 else 'locked' }}">
+                        🌟 80% Accuracy
+                    </div>
+                    <div class="achievement-badge {{ 'unlocked' if stats.total_trials >= 100 else 'locked' }}">
+                        💯 100 Trials
+                    </div>
+                    <div class="achievement-badge {{ 'unlocked' if stats.total_sessions >= 7 else 'locked' }}">
+                        📅 7-Day Practice
+                    </div>
+                    <div class="achievement-badge {{ 'unlocked' if stats.lifetime_score >= 5000 else 'locked' }}">
+                        🏆 5000 Points
+                    </div>
+                    <div class="achievement-badge {{ 'unlocked' if stats.overall_accuracy >= 0.95 else 'locked' }}">
+                        💎 95% Accuracy
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Sessions Table -->
+    <div class="card-custom p-4 mb-4">
+        <h5>📋 Recent Sessions</h5>
+        {% if recent_sessions %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Score</th>
+                        <th>Trials</th>
+                        <th>Correct</th>
+                        <th>Accuracy</th>
+                        <th>Avg Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in recent_sessions %}
+                    <tr>
+                        <td>{{ s.started_at[:10] if s.started_at else '-' }}</td>
+                        <td><strong>{{ s.total_score }}</strong></td>
+                        <td>{{ s.total_trials }}</td>
+                        <td>{{ s.correct_trials }}</td>
+                        <td>
+                            {% set acc = (s.correct_trials / s.total_trials * 100) if s.total_trials > 0 else 0 %}
+                            <span class="badge {% if acc >= 80 %}badge-strong{% elif acc >= 50 %}badge-moderate{% else %}badge-weak{% endif %} rounded-pill">
+                                {{ "%.0f"|format(acc) }}%
+                            </span>
+                        </td>
+                        <td>{{ "%.1f"|format(s.avg_response_time / 1000) }}s</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No sessions yet. <a href="/game?user_id={{ user.id if user else '' }}">Start your first session!</a> 🎮</p>
+        {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center mt-4">
+        <a href="/game?user_id={{ user.id if user else '' }}" class="btn btn-primary-custom me-2">🎮 Play Again</a>
+        <a href="/" class="btn btn-outline-secondary">🏠 Home</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Accuracy Chart
+    const dailyData = {{ daily | tojson }};
+    if (dailyData.length > 0) {
+        new Chart(document.getElementById('accuracyChart'), {
+            type: 'line',
+            data: {
+                labels: dailyData.map(d => d.date),
+                datasets: [{
+                    label: 'Accuracy %',
+                    data: dailyData.map(d => (d.accuracy * 100).toFixed(1)),
+                    borderColor: '#6C63FF',
+                    backgroundColor: 'rgba(108, 99, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#6C63FF',
+                    borderWidth: 3
+                }, {
+                    label: 'Score',
+                    data: dailyData.map(d => d.total_score),
+                    borderColor: '#00C853',
+                    backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    borderWidth: 2,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } },
+                scales: {
+                    y: { beginAtZero: true, max: 100, title: { display: true, text: 'Accuracy %' } },
+                    y1: { position: 'right', beginAtZero: true, title: { display: true, text: 'Score' }, grid: { drawOnChartArea: false } }
+                }
+            }
+        });
+    }
+
+    // Category Performance Chart
+    const catData = {{ category_performance | tojson }};
+    if (catData.length > 0) {
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: catData.map(c => c.category.replace(/_/g, ' ')),
+                datasets: [{
+                    data: catData.map(c => (c.accuracy * 100).toFixed(1)),
+                    backgroundColor: [
+                        '#6C63FF', '#00BFA5', '#FF6B35', '#FFB300',
+                        '#E91E63', '#00BCD4', '#8BC34A', '#FF5252'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

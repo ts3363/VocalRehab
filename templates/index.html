@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<!-- ============ HERO SECTION ============ -->
+<section class="vr-hero" aria-label="Welcome to VocalRehab">
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center min-vh-75 py-5">
+            <div class="col-lg-7 text-center text-lg-start mb-4 mb-lg-0">
+                <h1 class="hero-title display-2 fw-900">
+                    Vocal<span class="text-gradient">Rehab</span>
+                </h1>
+                <p class="hero-subtitle h3 fw-600 mb-3">
+                    Your Voice, Your Adventure <span class="emoji-float">🌟</span>
+                </p>
+                <p class="hero-description lead mb-4">
+                    A <strong>fun, game-based</strong> speech therapy app designed for people
+                    with dysarthria. Practice minimal pairs through exciting adventures,
+                    track your progress, and watch your speech skills <em>soar</em>! 🚀
+                </p>
+                <div class="d-flex gap-3 justify-content-center justify-content-lg-start flex-wrap">
+                    <a href="{{ url_for('game') }}" class="btn btn-vr-primary btn-lg px-5 py-3 rounded-pill shadow-lg">
+                        <i class="bi bi-play-circle-fill me-2"></i> Start Playing
+                    </a>
+                    <a href="#create-profile" class="btn btn-vr-outline btn-lg px-4 py-3 rounded-pill">
+                        <i class="bi bi-person-plus-fill me-2"></i> Create Profile
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <div class="hero-illustration">
+                    <div class="hero-character bounce-animation">
+                        <span class="hero-emoji" aria-hidden="true">🧙‍♂️</span>
+                    </div>
+                    <div class="hero-speech-bubble">
+                        <p class="mb-0 fw-bold">"Let's practice together!"</p>
+                    </div>
+                    <div class="floating-icons">
+                        <span class="float-icon fi-1">🎯</span>
+                        <span class="float-icon fi-2">⭐</span>
+                        <span class="float-icon fi-3">🏆</span>
+                        <span class="float-icon fi-4">💜</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FEATURES SECTION ============ -->
+<section class="vr-features py-5" aria-label="Features">
+    <div class="container">
+        <h2 class="text-center fw-800 mb-2">Why You'll Love VocalRehab</h2>
+        <p class="text-center text-muted mb-5 lead">Everything you need to make speech practice exciting</p>
+
+        <div class="row g-4">
+            <!-- Feature 1: Smart Recognition -->
+            <div class="col-md-4">
+                <div class="card vr-feature-card h-100 border-0 text-center p-4">
+                    <div class="feature-icon-wrap mx-auto mb-3">
+                        <span class="feature-icon">🎯</span>
+                    </div>
+                    <h3 class="h4 fw-bold">Smart Recognition</h3>
+                    <p class="text-muted mb-0">
+                        Our NLP engine understands you, even on tough days.
+                        It adapts to <em>your</em> voice and gives gentle, accurate feedback.
+                    </p>
+                    <div class="feature-badge mt-3">
+                        <span class="badge bg-vr-primary-soft">AI-Powered</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: Fun Games -->
+            <div class="col-md-4">
+                <div class="card vr-feature-card h-100 border-0 text-center p-4 featured">
+                    <div class="feature-icon-wrap mx-auto mb-3">
+                        <span class="feature-icon">🎮</span>
+                    </div>
+                    <h3 class="h4 fw-bold">Fun Games</h3>
+                    <p class="text-muted mb-0">
+                        Practice speech through exciting adventures! Choose your character,
+                        earn points, and unlock achievements as you play.
+                    </p>
+                    <div class="feature-badge mt-3">
+                        <span class="badge bg-vr-success-soft">Most Popular</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3: Track Progress -->
+            <div class="col-md-4">
+                <div class="card vr-feature-card h-100 border-0 text-center p-4">
+                    <div class="feature-icon-wrap mx-auto mb-3">
+                        <span class="feature-icon">📊</span>
+                    </div>
+                    <h3 class="h4 fw-bold">Track Progress</h3>
+                    <p class="text-muted mb-0">
+                        Watch your speech skills grow over time with beautiful charts,
+                        streaks, and milestone celebrations. 🎉
+                    </p>
+                    <div class="feature-badge mt-3">
+                        <span class="badge bg-vr-warning-soft">Motivating</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="vr-how-it-works py-5 bg-light-subtle" aria-label="How it works">
+    <div class="container">
+        <h2 class="text-center fw-800 mb-5">How It Works</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-sm-6 col-lg-3 text-center">
+                <div class="step-number mx-auto">1</div>
+                <h4 class="fw-bold mt-3">See the Pair</h4>
+                <p class="text-muted small">Two similar words appear — like "ship" 🚢 and "sheep" 🐑</p>
+            </div>
+            <div class="col-sm-6 col-lg-3 text-center">
+                <div class="step-number mx-auto">2</div>
+                <h4 class="fw-bold mt-3">Hear the Target</h4>
+                <p class="text-muted small">One word lights up — that's the one to say!</p>
+            </div>
+            <div class="col-sm-6 col-lg-3 text-center">
+                <div class="step-number mx-auto">3</div>
+                <h4 class="fw-bold mt-3">Speak Up!</h4>
+                <p class="text-muted small">Tap the mic and say the word at your own pace 🎤</p>
+            </div>
+            <div class="col-sm-6 col-lg-3 text-center">
+                <div class="step-number mx-auto">4</div>
+                <h4 class="fw-bold mt-3">Celebrate!</h4>
+                <p class="text-muted small">Earn points, streaks, and watch confetti fly! 🎊</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CREATE PROFILE SECTION ============ -->
+<section class="vr-create-profile py-5" id="create-profile" aria-label="Create your profile">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card vr-profile-card border-0 shadow-lg p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <span class="profile-emoji">👋</span>
+                        <h2 class="fw-800 mt-2">Create Your Profile</h2>
+                        <p class="text-muted">Let's set up your adventure! It only takes a moment.</p>
+                    </div>
+
+                    <form action="{{ url_for('create_profile') }}" method="POST" id="profileForm">
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="playerName" class="form-label fw-semibold">
+                                <i class="bi bi-person-fill me-1 text-primary"></i> Your Name
+                            </label>
+                            <input type="text" class="form-control form-control-lg vr-input"
+                                   id="playerName" name="name"
+                                   placeholder="What should we call you?"
+                                   required minlength="2" maxlength="50"
+                                   aria-describedby="nameHelp">
+                            <div id="nameHelp" class="form-text">Pick a fun name or your real one — your choice!</div>
+                        </div>
+
+                        <!-- Age -->
+                        <div class="mb-3">
+                            <label for="playerAge" class="form-label fw-semibold">
+                                <i class="bi bi-calendar-heart me-1 text-primary"></i> Your Age
+                            </label>
+                            <input type="number" class="form-control form-control-lg vr-input"
+                                   id="playerAge" name="age"
+                                   placeholder="How old are you?"
+                                   required min="3" max="120"
+                                   aria-describedby="ageHelp">
+                            <div id="ageHelp" class="form-text">This helps us pick the right difficulty for you.</div>
+                        </div>
+
+                        <!-- Condition Type -->
+                        <div class="mb-4">
+                            <label for="conditionType" class="form-label fw-semibold">
+                                <i class="bi bi-heart-pulse-fill me-1 text-primary"></i> Condition Type
+                            </label>
+                            <select class="form-select form-select-lg vr-input"
+                                    id="conditionType" name="condition_type"
+                                    required aria-describedby="conditionHelp">
+                                <option value="" disabled selected>Select your condition...</option>
+                                <option value="spastic">Spastic Dysarthria</option>
+                                <option value="flaccid">Flaccid Dysarthria</option>
+                                <option value="ataxic">Ataxic Dysarthria</option>
+                                <option value="hypokinetic">Hypokinetic Dysarthria</option>
+                                <option value="hyperkinetic">Hyperkinetic Dysarthria</option>
+                                <option value="mixed">Mixed Dysarthria</option>
+                                <option value="apraxia">Apraxia of Speech</option>
+                                <option value="other">Other / Not Sure</option>
+                            </select>
+                            <div id="conditionHelp" class="form-text">
+                                Don't worry if you're unsure — you can always change this later in Settings.
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-vr-primary btn-lg w-100 rounded-pill py-3">
+                            <i class="bi bi-rocket-takeoff-fill me-2"></i> Let's Go!
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ ENCOURAGEMENT BANNER ============ -->
+<section class="vr-encouragement text-center py-4">
+    <div class="container">
+        <p class="display-6 fw-bold mb-0">
+            <span class="me-2">💪</span>
+            You don't have to be perfect — you just have to try.
+            <span class="ms-2">💜</span>
+        </p>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Smooth scroll for #create-profile anchor
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+{% endblock %}

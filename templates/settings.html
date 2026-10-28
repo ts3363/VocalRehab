@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<section class="vr-settings py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="settings-emoji">⚙️</span>
+            <h1 class="fw-800 mt-2">Settings</h1>
+            <p class="text-muted lead">Customize your VocalRehab experience</p>
+        </div>
+
+        <form action="{{ url_for('save_settings') }}" method="POST" id="settingsForm">
+            <div class="row g-4 justify-content-center">
+                <!-- ===== PROFILE SETTINGS ===== -->
+                <div class="col-lg-8">
+                    <div class="card vr-settings-card border-0 shadow-sm mb-4">
+                        <div class="card-header vr-card-header">
+                            <h2 class="h5 mb-0">
+                                <i class="bi bi-person-circle me-2"></i> Your Profile
+                            </h2>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="settName" class="form-label fw-semibold">Display Name</label>
+                                    <input type="text" class="form-control vr-input" id="settName" name="name"
+                                           value="{{ user.name if user else '' }}"
+                                           placeholder="Your name" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="settAge" class="form-label fw-semibold">Age</label>
+                                    <input type="number" class="form-control vr-input" id="settAge" name="age"
+                                           value="{{ user.age if user else '' }}"
+                                           min="3" max="120" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="settAvatar" class="form-label fw-semibold">Avatar</label>
+                                    <select class="form-select vr-input" id="settAvatar" name="avatar">
+                                        <option value="🧙‍♂️" {{ 'selected' if user and user.avatar == '🧙‍♂️' }}>🧙‍♂️ Wizard</option>
+                                        <option value="🚀" {{ 'selected' if user and user.avatar == '🚀' }}>🚀 Rocket</option>
+                                        <option value="🐱" {{ 'selected' if user and user.avatar == '🐱' }}>🐱 Cat</option>
+                                        <option value="🦸" {{ 'selected' if user and user.avatar == '🦸' }}>🦸 Hero</option>
+                                        <option value="🐉" {{ 'selected' if user and user.avatar == '🐉' }}>🐉 Dragon</option>
+                                        <option value="🌟" {{ 'selected' if user and user.avatar == '🌟' }}>🌟 Star</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="settCondition" class="form-label fw-semibold">Condition Type</label>
+                                    <select class="form-select vr-input" id="settCondition" name="condition_type">
+                                        <option value="spastic" {{ 'selected' if user and user.condition_type == 'spastic' }}>Spastic Dysarthria</option>
+                                        <option value="flaccid" {{ 'selected' if user and user.condition_type == 'flaccid' }}>Flaccid Dysarthria</option>
+                                        <option value="ataxic" {{ 'selected' if user and user.condition_type == 'ataxic' }}>Ataxic Dysarthria</option>
+                                        <option value="hypokinetic" {{ 'selected' if user and user.condition_type == 'hypokinetic' }}>Hypokinetic Dysarthria</option>
+                                        <option value="hyperkinetic" {{ 'selected' if user and user.condition_type == 'hyperkinetic' }}>Hyperkinetic Dysarthria</option>
+                                        <option value="mixed" {{ 'selected' if user and user.condition_type == 'mixed' }}>Mixed Dysarthria</option>
+                                        <option value="apraxia" {{ 'selected' if user and user.condition_type == 'apraxia' }}>Apraxia of Speech</option>
+                                        <option value="other" {{ 'selected' if user and user.condition_type == 'other' }}>Other / Not Sure</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== VOICE SETTINGS ===== -->
+                <div class="col-lg-8">
+                    <div class="card vr-settings-card border-0 shadow-sm mb-4">
+                        <div class="card-header vr-card-header">
+                            <h2 class="h5 mb-0">
+                                <i class="bi bi-mic-fill me-2"></i> Voice Settings
+                            </h2>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="settLang" class="form-label fw-semibold">Recognition Language</label>
+                                    <select class="form-select vr-input" id="settLang" name="speech_lang">
+                                        <option value="en-US" {{ 'selected' if settings and settings.speech_lang == 'en-US' }}>English (US)</option>
+                                        <option value="en-GB" {{ 'selected' if settings and settings.speech_lang == 'en-GB' }}>English (UK)</option>
+                                        <option value="en-AU" {{ 'selected' if settings and settings.speech_lang == 'en-AU' }}>English (Australia)</option>
+                                        <option value="en-IN" {{ 'selected' if settings and settings.speech_lang == 'en-IN' }}>English (India)</option>
+                                        <option value="es-ES" {{ 'selected' if settings and settings.speech_lang == 'es-ES' }}>Spanish</option>
+                                        <option value="fr-FR" {{ 'selected' if settings and settings.speech_lang == 'fr-FR' }}>French</option>
+                                        <option value="de-DE" {{ 'selected' if settings and settings.speech_lang == 'de-DE' }}>German</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="settMicSensitivity" class="form-label fw-semibold">
+                                        Mic Sensitivity: <span id="micSensVal">{{ settings.mic_sensitivity if settings else 50 }}%</span>
+                                    </label>
+                                    <input type="range" class="form-range vr-range" id="settMicSensitivity"
+                                           name="mic_sensitivity" min="10" max="100"
+                                           value="{{ settings.mic_sensitivity if settings else 50 }}"
+                                           aria-label="Microphone sensitivity">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== GAME SETTINGS ===== -->
+                <div class="col-lg-8">
+                    <div class="card vr-settings-card border-0 shadow-sm mb-4">
+                        <div class="card-header vr-card-header">
+                            <h2 class="h5 mb-0">
+                                <i class="bi bi-controller me-2"></i> Game Settings
+                            </h2>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="settTheme" class="form-label fw-semibold">Game Theme</label>
+                                    <select class="form-select vr-input" id="settTheme" name="game_theme">
+                                        <option value="wizard" {{ 'selected' if settings and settings.game_theme == 'wizard' }}>🧙‍♂️ Wizard's Quest</option>
+                                        <option value="rocket" {{ 'selected' if settings and settings.game_theme == 'rocket' }}>🚀 Space Explorer</option>
+                                        <option value="animal" {{ 'selected' if settings and settings.game_theme == 'animal' }}>🐱 Animal Friends</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold d-block">Sound Effects</label>
+                                    <div class="form-check form-switch vr-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="settSoundFx" name="sound_effects"
+                                               {{ 'checked' if not settings or settings.sound_effects }}>
+                                        <label class="form-check-label" for="settSoundFx">
+                                            <span id="soundLabel">{{ 'On 🔊' if not settings or settings.sound_effects else 'Off 🔇' }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="settAnimSpeed" class="form-label fw-semibold">Animation Speed</label>
+                                    <select class="form-select vr-input" id="settAnimSpeed" name="animation_speed">
+                                        <option value="slow" {{ 'selected' if settings and settings.animation_speed == 'slow' }}>🐢 Slow</option>
+                                        <option value="normal" {{ 'selected' if not settings or (settings and settings.animation_speed == 'normal') }}>🐇 Normal</option>
+                                        <option value="fast" {{ 'selected' if settings and settings.animation_speed == 'fast' }}>⚡ Fast</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== THERAPY SETTINGS ===== -->
+                <div class="col-lg-8">
+                    <div class="card vr-settings-card border-0 shadow-sm mb-4">
+                        <div class="card-header vr-card-header">
+                            <h2 class="h5 mb-0">
+                                <i class="bi bi-heart-pulse-fill me-2"></i> Therapy Settings
+                            </h2>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="settDifficulty" class="form-label fw-semibold">Preferred Difficulty</label>
+                                    <select class="form-select vr-input" id="settDifficulty" name="difficulty">
+                                        <option value="easy" {{ 'selected' if settings and settings.difficulty == 'easy' }}>⭐ Easy — I'm just starting</option>
+                                        <option value="medium" {{ 'selected' if not settings or (settings and settings.difficulty == 'medium') }}>⭐⭐ Medium — I'm getting better</option>
+                                        <option value="hard" {{ 'selected' if settings and settings.difficulty == 'hard' }}>⭐⭐⭐ Hard — Challenge me!</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="settTrials" class="form-label fw-semibold">
+                                        Session Length: <span id="trialsVal">{{ settings.session_length if settings else 10 }} trials</span>
+                                    </label>
+                                    <input type="range" class="form-range vr-range" id="settTrials"
+                                           name="session_length" min="5" max="30" step="5"
+                                           value="{{ settings.session_length if settings else 10 }}"
+                                           aria-label="Number of trials per session">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Focus Phonemes</label>
+                                    <p class="text-muted small mb-2">Select the sounds you'd like to practice most</p>
+                                    <div class="row g-2">
+                                        {% set phoneme_groups = [
+                                            ('p_b', 'P / B', '👄'),
+                                            ('t_d', 'T / D', '👅'),
+                                            ('k_g', 'K / G', '🗣️'),
+                                            ('f_v', 'F / V', '🦷'),
+                                            ('s_z', 'S / Z', '🐍'),
+                                            ('sh_ch', 'SH / CH', '🤫'),
+                                            ('th', 'TH', '😛'),
+                                            ('r_l', 'R / L', '🌊'),
+                                            ('m_n', 'M / N', '🎵'),
+                                            ('w_y', 'W / Y', '💨'),
+                                            ('vowels', 'Vowels', '🔤'),
+                                            ('blends', 'Blends', '🔗')
+                                        ] %}
+                                        {% for value, label, icon in phoneme_groups %}
+                                        <div class="col-6 col-sm-4 col-md-3">
+                                            <div class="form-check vr-phoneme-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="ph_{{ value }}" name="focus_phonemes" value="{{ value }}"
+                                                       {{ 'checked' if settings and value in (settings.focus_phonemes or []) }}>
+                                                <label class="form-check-label" for="ph_{{ value }}">
+                                                    {{ icon }} {{ label }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ACCESSIBILITY SETTINGS ===== -->
+                <div class="col-lg-8">
+                    <div class="card vr-settings-card border-0 shadow-sm mb-4">
+                        <div class="card-header vr-card-header">
+                            <h2 class="h5 mb-0">
+                                <i class="bi bi-universal-access me-2"></i> Accessibility
+                            </h2>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-6">
+                                    <label for="settFontSize" class="form-label fw-semibold">
+                                        Font Size: <span id="fontSizeVal">{{ settings.font_size if settings else 100 }}%</span>
+                                    </label>
+                                    <input type="range" class="form-range vr-range" id="settFontSize"
+                                           name="font_size" min="80" max="150" step="10"
+                                           value="{{ settings.font_size if settings else 100 }}"
+                                           aria-label="Font size adjustment">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">A</small>
+                                        <small class="text-muted" style="font-size:1.3em;">A</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold d-block">High Contrast</label>
+                                    <div class="form-check form-switch vr-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="settHighContrast" name="high_contrast"
+                                               {{ 'checked' if settings and settings.high_contrast }}>
+                                        <label class="form-check-label" for="settHighContrast">
+                                            {{ 'On' if settings and settings.high_contrast else 'Off' }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold d-block">Reduced Motion</label>
+                                    <div class="form-check form-switch vr-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="settReducedMotion" name="reduced_motion"
+                                               {{ 'checked' if settings and settings.reduced_motion }}>
+                                        <label class="form-check-label" for="settReducedMotion">
+                                            {{ 'On' if settings and settings.reduced_motion else 'Off' }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SAVE BUTTON ===== -->
+                <div class="col-lg-8 text-center">
+                    <button type="submit" class="btn btn-vr-primary btn-lg px-5 py-3 rounded-pill shadow-lg">
+                        <i class="bi bi-check-circle-fill me-2"></i> Save Settings
+                    </button>
+                    <p class="text-muted mt-3 small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Your settings are saved automatically on this device.
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    'use strict';
+
+    // Range slider live labels
+    const micSlider = document.getElementById('settMicSensitivity');
+    const micVal = document.getElementById('micSensVal');
+    if (micSlider && micVal) {
+        micSlider.addEventListener('input', () => { micVal.textContent = micSlider.value + '%'; });
+    }
+
+    const trialsSlider = document.getElementById('settTrials');
+    const trialsVal = document.getElementById('trialsVal');
+    if (trialsSlider && trialsVal) {
+        trialsSlider.addEventListener('input', () => { trialsVal.textContent = trialsSlider.value + ' trials'; });
+    }
+
+    const fontSlider = document.getElementById('settFontSize');
+    const fontVal = document.getElementById('fontSizeVal');
+    if (fontSlider && fontVal) {
+        fontSlider.addEventListener('input', () => {
+            fontVal.textContent = fontSlider.value + '%';
+            document.documentElement.style.fontSize = fontSlider.value + '%';
+        });
+    }
+
+    // Sound toggle label
+    const soundFx = document.getElementById('settSoundFx');
+    const soundLabel = document.getElementById('soundLabel');
+    if (soundFx && soundLabel) {
+        soundFx.addEventListener('change', () => {
+            soundLabel.textContent = soundFx.checked ? 'On 🔊' : 'Off 🔇';
+        });
+    }
+
+    // High contrast toggle
+    const hcToggle = document.getElementById('settHighContrast');
+    if (hcToggle) {
+        hcToggle.addEventListener('change', () => {
+            document.documentElement.setAttribute(
+                'data-theme', hcToggle.checked ? 'high-contrast' : 'default'
+            );
+        });
+    }
+
+    // Reduced motion toggle
+    const rmToggle = document.getElementById('settReducedMotion');
+    if (rmToggle) {
+        rmToggle.addEventListener('change', () => {
+            document.documentElement.classList.toggle('reduce-motion', rmToggle.checked);
+        });
+    }
+})();
+</script>
+{% endblock %}
