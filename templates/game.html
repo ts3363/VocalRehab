@@ -8,7 +8,7 @@
     <!-- Top Bar: Score, Streak, Difficulty, Trial Counter -->
     <div class="game-topbar">
         <div class="topbar-item">
-            <div class="topbar-label">Score</div>
+            <div class="topbar-label"><i class="bi bi-trophy-fill text-warning me-1"></i> Score</div>
             <div class="topbar-value" id="score-value">0</div>
         </div>
         <div class="topbar-item">
@@ -16,15 +16,15 @@
             <div class="topbar-value streak" id="streak-value">0</div>
         </div>
         <div class="topbar-item">
-            <div class="topbar-label">Best Streak</div>
+            <div class="topbar-label"><i class="bi bi-award-fill text-primary me-1"></i> Best Streak</div>
             <div class="topbar-value" id="best-streak-value">0</div>
         </div>
         <div class="topbar-item">
-            <div class="topbar-label">Difficulty</div>
+            <div class="topbar-label"><i class="bi bi-speedometer2 me-1"></i> Difficulty</div>
             <div id="difficulty-stars">⭐☆☆</div>
         </div>
         <div class="topbar-item">
-            <div class="topbar-label">Trial</div>
+            <div class="topbar-label"><i class="bi bi-bullseye me-1"></i> Trial</div>
             <div class="topbar-value" id="trial-counter">0 / 15</div>
         </div>
         <div class="topbar-item">
@@ -32,32 +32,72 @@
         </div>
     </div>
 
+    <!-- Visual Session Progress Bar -->
+    <div class="game-progress-wrapper">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="text-muted fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Session Progress</span>
+            <span class="fw-bold text-primary" id="progress-percent" style="font-size: 0.76rem;">0%</span>
+        </div>
+        <div class="game-progress-track">
+            <div class="game-progress-fill" id="session-progress-bar" style="width: 0%;"></div>
+        </div>
+    </div>
+
     <!-- Game Arena -->
     <div class="game-arena" id="game-arena">
-        <!-- Character -->
-        <div class="game-character" id="game-character">🧙‍♂️</div>
+        <!-- Arena Prompt Header -->
+        <div class="arena-header">
+            <div class="game-character-badge">
+                <span class="game-character" id="game-character">🧙‍♂️</span>
+            </div>
+            <div class="arena-prompt">
+                <span class="arena-prompt-title" id="arena-prompt-title">Say the Target Word</span>
+                <span class="arena-prompt-subtitle" id="arena-prompt-subtitle">Practice contrasting the minimal pair sounds clearly</span>
+            </div>
+        </div>
 
         <!-- Options -->
         <div class="game-options">
             <!-- Left Option -->
             <div class="game-option" id="option-left">
+                <div class="option-role-badge" id="option-left-badge">🎯 TARGET</div>
                 <span class="option-hint">🚢</span>
                 <span class="option-word">ship</span>
+                <button type="button" class="btn-listen" id="btn-listen-left" title="Click to hear pronunciation">
+                    <i class="bi bi-volume-up-fill me-1"></i> Hear Word
+                </button>
             </div>
 
             <!-- Right Option -->
             <div class="game-option" id="option-right">
+                <div class="option-role-badge" id="option-right-badge">CONTRAST</div>
                 <span class="option-hint">🐑</span>
                 <span class="option-word">sheep</span>
+                <button type="button" class="btn-listen" id="btn-listen-right" title="Click to hear pronunciation">
+                    <i class="bi bi-volume-up-fill me-1"></i> Hear Word
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Microphone Section -->
+    <!-- Microphone & Voice Console Section -->
     <div class="mic-section">
-        <button class="mic-btn" id="mic-btn" onclick="game && game.toggleListening()" title="Click to speak (Click again to stop & evaluate)">
-            🎤
-        </button>
+        <div class="mic-controls-row">
+            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-2 fw-bold" id="btn-hear-target" title="Listen to the target pronunciation before speaking">
+                <i class="bi bi-volume-up-fill me-1"></i> Hear Target
+            </button>
+
+            <div class="mic-btn-wrapper">
+                <button class="mic-btn" id="mic-btn" onclick="game && game.toggleListening()" title="Click to speak (Click again to stop & evaluate)">
+                    <i class="bi bi-mic-fill"></i>
+                </button>
+            </div>
+
+            <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 fw-semibold" onclick="document.getElementById('manual-speech-input').focus()" title="Type if microphone is unavailable">
+                <i class="bi bi-keyboard me-1"></i> Type Word
+            </button>
+        </div>
+
         <div class="waveform" id="waveform">
             <div class="waveform-bar"></div>
             <div class="waveform-bar"></div>
@@ -68,28 +108,34 @@
             <div class="waveform-bar"></div>
             <div class="waveform-bar"></div>
             <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
+            <div class="waveform-bar"></div>
         </div>
-        <p class="text-muted small mt-2 mb-0">
-            💡 <strong>Tip:</strong> Click mic to speak (click again to stop & evaluate), or <strong>click either card directly!</strong>
-        </p>
+
+        <!-- Game Status -->
+        <div class="game-status status-info" id="game-status">
+            🎮 Ready! Click the microphone or press Space to speak.
+        </div>
+
+        <!-- Feedback Tip -->
+        <div class="feedback-tip" id="feedback-tip">
+            <span class="feedback-text"></span>
+        </div>
 
         <!-- Manual text testing fallback -->
-        <div class="mt-3 d-flex justify-content-center">
-            <div class="input-group input-group-sm" style="max-width: 380px;">
-                <input type="text" id="manual-speech-input" class="form-control" placeholder="Or type pronunciation (e.g. ship, shep)" onkeydown="if(event.key==='Enter') game && game.submitManualInput()">
-                <button class="btn btn-outline-primary" type="button" onclick="game && game.submitManualInput()">Test Word</button>
+        <div class="mt-2 d-flex justify-content-center">
+            <div class="input-group input-group-sm" style="max-width: 440px;">
+                <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-keyboard"></i></span>
+                <input type="text" id="manual-speech-input" class="form-control border-start-0" placeholder="Type pronunciation here (e.g. rock, lock) & press Enter" onkeydown="if(event.key==='Enter') game && game.submitManualInput()">
+                <button class="btn btn-primary fw-semibold px-3" type="button" onclick="game && game.submitManualInput()">Submit</button>
             </div>
         </div>
-    </div>
 
-    <!-- Game Status -->
-    <div class="game-status status-info" id="game-status">
-        🎮 Ready! Click the microphone and say the highlighted word.
-    </div>
-
-    <!-- Feedback Tip -->
-    <div class="feedback-tip" id="feedback-tip">
-        <span class="feedback-text"></span>
+        <p class="quick-hints mt-2 mb-0">
+            <span class="badge bg-light text-dark border me-1">💡 Tip</span>
+            Click mic to speak (click again to evaluate), or <strong>click either card directly!</strong> Press Space to toggle mic.
+        </p>
     </div>
 </div>
 

@@ -77,8 +77,39 @@ class VocalRehabGame {
 
         this.updateScoreboard();
         this.showStatus('🎮 Ready! Loading your first challenge...', 'info');
+
+        // Spacebar listener for hands-free speech toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                this.toggleListening();
+            }
+        });
+
         await this.loadNextPair();
         return true;
+    }
+
+    // -------------------------------------------------------- //
+    //  SPEECH SYNTHESIS (HEAR WORD HELPER)
+    // -------------------------------------------------------- //
+
+    speakWord(word) {
+        if (!word) return;
+        if (!('speechSynthesis' in window)) {
+            console.warn('SpeechSynthesis API not supported in this browser.');
+            return;
+        }
+        try {
+            window.speechSynthesis.cancel(); // Stop any pending speech
+            const utter = new SpeechSynthesisUtterance(word);
+            utter.lang = 'en-US';
+            utter.rate = 0.85; // Slightly slower pacing for speech therapy
+            utter.pitch = 1.0;
+            window.speechSynthesis.speak(utter);
+        } catch (e) {
+            console.error('Speech synthesis error:', e);
+        }
     }
 
     // -------------------------------------------------------- //
@@ -121,54 +152,124 @@ class VocalRehabGame {
             character.classList.remove('celebrate', 'shake');
         }
 
-        // Update options
+        // Update Arena Header Prompt
+        const promptTitle = document.getElementById('arena-prompt-title');
+        const promptSubtitle = document.getElementById('arena-prompt-subtitle');
+        if (promptTitle) {
+            promptTitle.textContent = `Say the Target Word: "${scenario.target_word.toUpperCase()}"`;
+        }
+        if (promptSubtitle) {
+            promptSubtitle.textContent = `Contrast /${scenario.word1}/ vs /${scenario.word2}/`;
+        }
+
+        // Update Left Option
         const leftOption = document.getElementById('option-left');
-        const rightOption = document.getElementById('option-right');
+        const leftBadge = document.getElementById('option-left-badge');
+        const btnListenLeft = document.getElementById('btn-listen-left');
 
         if (leftOption) {
             leftOption.querySelector('.option-hint').textContent = scenario.option_left.hint;
             leftOption.querySelector('.option-word').textContent = scenario.option_left.word;
-            leftOption.classList.remove('correct-option', 'wrong-option');
+            leftOption.classList.remove('correct-option', 'wrong-option', 'target-card', 'contrast-card');
             leftOption.style.cursor = 'pointer';
-            leftOption.title = `Click to choose "${scenario.option_left.word}"`;
+            leftOption.title = `Click or pronounce "${scenario.option_left.word}"`;
             leftOption.onclick = () => {
                 this.showStatus(`👉 Card selected: "${scenario.option_left.word}". Analyzing...`, 'processing');
                 this.processResult(scenario.option_left.word, [scenario.option_left.word]);
             };
+
             if (scenario.option_left.is_target) {
+                leftOption.classList.add('target-card');
                 leftOption.querySelector('.option-word').classList.add('target-highlight');
+                if (leftBadge) {
+                    leftBadge.textContent = '🎯 TARGET WORD';
+                    leftBadge.className = 'option-role-badge';
+                }
             } else {
+                leftOption.classList.add('contrast-card');
                 leftOption.querySelector('.option-word').classList.remove('target-highlight');
+                if (leftBadge) {
+                    leftBadge.textContent = 'CONTRAST';
+                    leftBadge.className = 'option-role-badge';
+                }
             }
         }
+
+        if (btnListenLeft) {
+            btnListenLeft.onclick = (e) => {
+                e.stopPropagation();
+                this.speakWord(scenario.option_left.word);
+            };
+        }
+
+        // Update Right Option
+        const rightOption = document.getElementById('option-right');
+        const rightBadge = document.getElementById('option-right-badge');
+        const btnListenRight = document.getElementById('btn-listen-right');
 
         if (rightOption) {
             rightOption.querySelector('.option-hint').textContent = scenario.option_right.hint;
             rightOption.querySelector('.option-word').textContent = scenario.option_right.word;
-            rightOption.classList.remove('correct-option', 'wrong-option');
+            rightOption.classList.remove('correct-option', 'wrong-option', 'target-card', 'contrast-card');
             rightOption.style.cursor = 'pointer';
-            rightOption.title = `Click to choose "${scenario.option_right.word}"`;
+            rightOption.title = `Click or pronounce "${scenario.option_right.word}"`;
             rightOption.onclick = () => {
                 this.showStatus(`👉 Card selected: "${scenario.option_right.word}". Analyzing...`, 'processing');
                 this.processResult(scenario.option_right.word, [scenario.option_right.word]);
             };
+
             if (scenario.option_right.is_target) {
+                rightOption.classList.add('target-card');
                 rightOption.querySelector('.option-word').classList.add('target-highlight');
+                if (rightBadge) {
+                    rightBadge.textContent = '🎯 TARGET WORD';
+                    rightBadge.className = 'option-role-badge';
+                }
             } else {
+                rightOption.classList.add('contrast-card');
                 rightOption.querySelector('.option-word').classList.remove('target-highlight');
+                if (rightBadge) {
+                    rightBadge.textContent = 'CONTRAST';
+                    rightBadge.className = 'option-role-badge';
+                }
             }
+        }
+
+        if (btnListenRight) {
+            btnListenRight.onclick = (e) => {
+                e.stopPropagation();
+                this.speakWord(scenario.option_right.word);
+            };
+        }
+
+        // Wire up top "Hear Target" button in mic console
+        const btnHearTarget = document.getElementById('btn-hear-target');
+        if (btnHearTarget) {
+            btnHearTarget.onclick = () => {
+                this.speakWord(scenario.target_word);
+            };
         }
 
         // Update category badge
         const catBadge = document.getElementById('category-badge');
-        if (catBadge) catBadge.textContent = scenario.category_name || scenario.category;
+        if (catBadge) {
+            const catName = scenario.category_name || scenario.category || 'Therapy';
+            catBadge.innerHTML = `<i class="bi bi-tag-fill me-1"></i> ${catName}`;
+        }
 
         // Update difficulty stars
         this.updateDifficultyStars(scenario.difficulty);
 
-        // Update trial counter
+        // Update trial counter & progress bar
+        const trialCurrent = this.trialsCompleted + 1;
         const trialCounter = document.getElementById('trial-counter');
-        if (trialCounter) trialCounter.textContent = `${this.trialsCompleted + 1} / ${this.sessionLength}`;
+        if (trialCounter) trialCounter.textContent = `${trialCurrent} / ${this.sessionLength}`;
+
+        const pct = Math.min(100, Math.round((trialCurrent / this.sessionLength) * 100));
+        const progressFill = document.getElementById('session-progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        if (progressFill) progressFill.style.width = `${pct}%`;
+        if (progressPercent) progressPercent.textContent = `${pct}% (${trialCurrent}/${this.sessionLength})`;
 
         // Enable mic button
         const micBtn = document.getElementById('mic-btn');
@@ -343,8 +444,6 @@ class VocalRehabGame {
         const character = document.getElementById('game-character');
         if (character) {
             character.classList.add('celebrate');
-            // Move character toward correct side
-            character.style.transform = targetIdx === 0 ? 'translateX(-80px)' : 'translateX(80px)';
         }
 
         // Score popup
@@ -358,9 +457,9 @@ class VocalRehabGame {
 
         // Auto-load next pair after delay
         setTimeout(() => {
-            if (character) character.style.transform = '';
+            if (character) character.classList.remove('celebrate');
             this.loadNextPair();
-        }, 2200);
+        }, 2000);
     }
 
     handleIncorrect(result) {
@@ -384,9 +483,10 @@ class VocalRehabGame {
 
         // Auto-load next pair after longer delay
         setTimeout(() => {
+            if (character) character.classList.remove('shake');
             this.hideFeedbackTip();
             this.loadNextPair();
-        }, 3500);
+        }, 3200);
     }
 
     // -------------------------------------------------------- //
