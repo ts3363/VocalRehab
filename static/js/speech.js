@@ -155,6 +155,7 @@ class SpeechHandler {
     /**
      * Stop listening intentionally.
      * @param {boolean} [processPending=false] - Whether to deliver pending interim transcripts
+     * @returns {boolean} - True if a pending transcript was immediately dispatched
      */
     stopListening(processPending = false) {
         this._intentionalStop = true;
@@ -183,7 +184,9 @@ class SpeechHandler {
                 confidence: 0.8,
                 alternatives: finalAlts
             });
+            return true;
         }
+        return false;
     }
 
     /**
@@ -307,13 +310,7 @@ class SpeechHandler {
             return;
         }
 
-        // For no-speech or network, retry at most once, then inform user
-        if (['no-speech', 'network'].includes(event.error)) {
-            if (this._retryCount < 1 && !this._intentionalStop) {
-                return; // One auto-restart
-            }
-        }
-
+        // Notify error listener cleanly without getting stuck
         this._setState('error');
         if (this._onError) {
             this._onError({ error: event.error, message });
@@ -325,7 +322,7 @@ class SpeechHandler {
         this._clearTimeout();
 
         // If recognition ended but we had interim words, deliver them!
-        if (this._lastInterimTranscript && this._onResult && !this._intentionalStop) {
+        if (this._lastInterimTranscript && this._onResult) {
             const text = this._lastInterimTranscript;
             this._lastInterimTranscript = '';
             this._isListening = false;

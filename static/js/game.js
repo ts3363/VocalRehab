@@ -285,15 +285,30 @@ class VocalRehabGame {
 
     toggleListening() {
         if (this.isListening) {
-            // User clicked while listening -> Stop and process whatever was heard!
-            this.showStatus('⏳ Stopping and evaluating...', 'processing');
+            // User clicked while listening -> Stop and evaluate!
+            this.showStatus('⏳ Evaluating speech...', 'processing');
+            
+            let delivered = false;
             if (this.speech) {
-                this.speech.stopListening(true);
+                delivered = this.speech.stopListening(true);
             }
             this.isListening = false;
             const micBtn = document.getElementById('mic-btn');
             if (micBtn) micBtn.classList.remove('listening');
             this.updateWaveform(false);
+
+            // Safety timeout: If no transcript is delivered within 1000ms, reset and notify user!
+            if (!delivered) {
+                if (this._evalTimeout) clearTimeout(this._evalTimeout);
+                this._evalTimeout = setTimeout(() => {
+                    if (!this._resultDelivered) {
+                        const statusEl = document.getElementById('game-status');
+                        if (statusEl && statusEl.textContent.includes('Evaluating')) {
+                            this.showStatus("🤔 No speech heard. Speak clearly into mic, or click either card directly!", 'warning');
+                        }
+                    }
+                }, 1000);
+            }
         } else {
             this.startListening();
         }
@@ -302,17 +317,27 @@ class VocalRehabGame {
     startListening() {
         if (this.isListening || !this.currentScenario) return;
         this.isListening = true;
+        this._resultDelivered = false;
+        if (this._evalTimeout) {
+            clearTimeout(this._evalTimeout);
+            this._evalTimeout = null;
+        }
         this.startTime = Date.now();
 
         const micBtn = document.getElementById('mic-btn');
         if (micBtn) micBtn.classList.add('listening');
 
         this.updateWaveform(true);
-        this.showStatus('🎤 Listening... Speak now! (Tap mic again to stop)', 'listening');
+        this.showStatus('🎤 Listening... Speak now! (Tap mic when done)', 'listening');
 
         this.speech.startListening(
             // onResult
             (data, maybeAlts) => {
+                this._resultDelivered = true;
+                if (this._evalTimeout) {
+                    clearTimeout(this._evalTimeout);
+                    this._evalTimeout = null;
+                }
                 this.isListening = false;
                 if (micBtn) micBtn.classList.remove('listening');
                 this.updateWaveform(false);
@@ -333,11 +358,15 @@ class VocalRehabGame {
                 if (transcript && transcript.trim()) {
                     this.processResult(transcript.trim(), alternatives);
                 } else {
-                    this.showStatus("🤔 I didn't catch that. Tap the mic to try again, or click a card directly!", 'warning');
+                    this.showStatus("🤔 Didn't catch that sound. Tap mic to try again, or click either card directly!", 'warning');
                 }
             },
             // onError
             (error) => {
+                if (this._evalTimeout) {
+                    clearTimeout(this._evalTimeout);
+                    this._evalTimeout = null;
+                }
                 this.isListening = false;
                 if (micBtn) micBtn.classList.remove('listening');
                 this.updateWaveform(false);
@@ -347,8 +376,8 @@ class VocalRehabGame {
 
                 if (errCode === 'not-allowed') {
                     this.showStatus('🔒 Microphone blocked! Please allow microphone access in your browser bar, or click cards directly.', 'error');
-                } else if (errCode === 'no-speech' || errCode === 'timeout') {
-                    this.showStatus("🤔 I didn't hear anything. Tap the mic and speak, or click the card directly!", 'warning');
+                } else if (errCode === 'no-speech' || errCode === 'timeout' || errCode === 'aborted') {
+                    this.showStatus("🤔 No speech heard. Tap mic to try again, click a card, or type below!", 'warning');
                 } else {
                     this.showStatus(errMsg || '⚠️ Speech notice. You can also click the cards directly to play!', 'warning');
                 }
@@ -358,6 +387,16 @@ class VocalRehabGame {
                 this.isListening = false;
                 if (micBtn) micBtn.classList.remove('listening');
                 this.updateWaveform(false);
+
+                // If onEnd fired and no result was delivered
+                if (!this._resultDelivered) {
+                    setTimeout(() => {
+                        const statusEl = document.getElementById('game-status');
+                        if (statusEl && (statusEl.textContent.includes('Listening') || statusEl.textContent.includes('Stopping') || statusEl.textContent.includes('Evaluating'))) {
+                            this.showStatus("🤔 No speech heard. Speak clearly into mic, or click either card directly!", 'warning');
+                        }
+                    }, 800);
+                }
             }
         );
     }
