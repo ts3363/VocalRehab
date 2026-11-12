@@ -246,9 +246,15 @@ a:hover { color: var(--primary-dark); }
     background: var(--bg-card);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    cursor: default;
+    cursor: pointer;
     transition: var(--transition);
     position: relative;
+    border: 2px solid transparent;
+}
+.game-option:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
 }
 .game-option .option-hint {
     font-size: 3.5rem;

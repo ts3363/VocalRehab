@@ -43,11 +43,11 @@ class VocalRehabGame {
 
         // Initialize speech handler
         this.speech = new SpeechHandler({
-            lang: 'en-US',
+            language: 'en-US',
             continuous: false,
-            interimResults: false,
+            interimResults: true,
             maxAlternatives: 5,
-            timeout: 10000
+            timeoutMs: 6000
         });
 
         const support = this.speech.checkSupport();
@@ -129,6 +129,12 @@ class VocalRehabGame {
             leftOption.querySelector('.option-hint').textContent = scenario.option_left.hint;
             leftOption.querySelector('.option-word').textContent = scenario.option_left.word;
             leftOption.classList.remove('correct-option', 'wrong-option');
+            leftOption.style.cursor = 'pointer';
+            leftOption.title = `Click to choose "${scenario.option_left.word}"`;
+            leftOption.onclick = () => {
+                this.showStatus(`👉 Card selected: "${scenario.option_left.word}". Analyzing...`, 'processing');
+                this.processResult(scenario.option_left.word, [scenario.option_left.word]);
+            };
             if (scenario.option_left.is_target) {
                 leftOption.querySelector('.option-word').classList.add('target-highlight');
             } else {
@@ -140,6 +146,12 @@ class VocalRehabGame {
             rightOption.querySelector('.option-hint').textContent = scenario.option_right.hint;
             rightOption.querySelector('.option-word').textContent = scenario.option_right.word;
             rightOption.classList.remove('correct-option', 'wrong-option');
+            rightOption.style.cursor = 'pointer';
+            rightOption.title = `Click to choose "${scenario.option_right.word}"`;
+            rightOption.onclick = () => {
+                this.showStatus(`👉 Card selected: "${scenario.option_right.word}". Analyzing...`, 'processing');
+                this.processResult(scenario.option_right.word, [scenario.option_right.word]);
+            };
             if (scenario.option_right.is_target) {
                 rightOption.querySelector('.option-word').classList.add('target-highlight');
             } else {
@@ -167,8 +179,24 @@ class VocalRehabGame {
     }
 
     // -------------------------------------------------------- //
-    //  SPEECH RECOGNITION
+    //  SPEECH RECOGNITION & INPUT
     // -------------------------------------------------------- //
+
+    toggleListening() {
+        if (this.isListening) {
+            // User clicked while listening -> Stop and process whatever was heard!
+            this.showStatus('⏳ Stopping and evaluating...', 'processing');
+            if (this.speech) {
+                this.speech.stopListening(true);
+            }
+            this.isListening = false;
+            const micBtn = document.getElementById('mic-btn');
+            if (micBtn) micBtn.classList.remove('listening');
+            this.updateWaveform(false);
+        } else {
+            this.startListening();
+        }
+    }
 
     startListening() {
         if (this.isListening || !this.currentScenario) return;
@@ -179,7 +207,7 @@ class VocalRehabGame {
         if (micBtn) micBtn.classList.add('listening');
 
         this.updateWaveform(true);
-        this.showStatus('🎤 Listening... Speak now!', 'listening');
+        this.showStatus('🎤 Listening... Speak now! (Tap mic again to stop)', 'listening');
 
         this.speech.startListening(
             // onResult
@@ -201,17 +229,27 @@ class VocalRehabGame {
                     }
                 }
 
-                this.processResult(transcript, alternatives);
+                if (transcript && transcript.trim()) {
+                    this.processResult(transcript.trim(), alternatives);
+                } else {
+                    this.showStatus("🤔 I didn't catch that. Tap the mic to try again, or click a card directly!", 'warning');
+                }
             },
             // onError
             (error) => {
                 this.isListening = false;
                 if (micBtn) micBtn.classList.remove('listening');
                 this.updateWaveform(false);
-                if (error === 'no-speech') {
-                    this.showStatus("🤔 I didn't hear anything. Tap the mic and try again!", 'warning');
+
+                const errCode = typeof error === 'object' && error.error ? error.error : error;
+                const errMsg = typeof error === 'object' && error.message ? error.message : '';
+
+                if (errCode === 'not-allowed') {
+                    this.showStatus('🔒 Microphone blocked! Please allow microphone access in your browser bar, or click cards directly.', 'error');
+                } else if (errCode === 'no-speech' || errCode === 'timeout') {
+                    this.showStatus("🤔 I didn't hear anything. Tap the mic and speak, or click the card directly!", 'warning');
                 } else {
-                    this.showStatus('⚠️ Could not recognize speech. Please try again.', 'error');
+                    this.showStatus(errMsg || '⚠️ Speech notice. You can also click the cards directly to play!', 'warning');
                 }
             },
             // onEnd
@@ -224,11 +262,24 @@ class VocalRehabGame {
     }
 
     stopListening() {
-        if (this.speech) this.speech.stopListening();
+        if (this.speech) this.speech.stopListening(false);
         this.isListening = false;
         const micBtn = document.getElementById('mic-btn');
         if (micBtn) micBtn.classList.remove('listening');
         this.updateWaveform(false);
+    }
+
+    submitManualInput() {
+        const input = document.getElementById('manual-speech-input');
+        if (!input) return;
+        const text = input.value.trim();
+        if (!text) {
+            this.showStatus('Please type a word first!', 'warning');
+            return;
+        }
+        input.value = '';
+        this.showStatus(`Analyzing "${text}"...`, 'processing');
+        this.processResult(text, [text]);
     }
 
     // -------------------------------------------------------- //

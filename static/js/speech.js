@@ -37,6 +37,7 @@ class SpeechHandler {
         this._retryCount     = 0;
         this._timeoutTimer   = null;
         this._lastAlternatives = [];
+        this._lastInterimTranscript = '';
         this._state          = 'idle'; // 'idle' | 'listening' | 'processing' | 'error'
         this._intentionalStop = false;
 
@@ -153,10 +154,15 @@ class SpeechHandler {
 
     /**
      * Stop listening intentionally.
+     * @param {boolean} [processPending=false] - Whether to deliver pending interim transcripts
      */
-    stopListening() {
+    stopListening(processPending = false) {
         this._intentionalStop = true;
         this._clearTimeout();
+
+        const pendingText = this._lastInterimTranscript;
+        const pendingAlts = this._lastAlternatives;
+
         if (this._recognition) {
             try {
                 this._recognition.stop();
@@ -166,6 +172,18 @@ class SpeechHandler {
         }
         this._isListening = false;
         this._setState('idle');
+
+        // If requested or if we have pending interim text but no final result yet, deliver it!
+        if (processPending && pendingText && this._onResult) {
+            const finalAlts = pendingAlts.length > 0 ? pendingAlts : [{ transcript: pendingText, confidence: 0.8 }];
+            this._lastInterimTranscript = '';
+            this._lastAlternatives = [];
+            this._onResult({
+                transcript: pendingText,
+                confidence: 0.8,
+                alternatives: finalAlts
+            });
+        }
     }
 
     /**
@@ -212,6 +230,7 @@ class SpeechHandler {
         this._setState('processing');
 
         const alternatives = [];
+        let interimText = '';
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
             const result = event.results[i];
@@ -224,11 +243,18 @@ class SpeechHandler {
                         confidence: result[j].confidence
                     });
                 }
+            } else if (result[0] && result[0].transcript) {
+                interimText = result[0].transcript.trim();
             }
+        }
+
+        if (interimText) {
+            this._lastInterimTranscript = interimText;
         }
 
         if (alternatives.length > 0) {
             this._lastAlternatives = alternatives;
+            this._lastInterimTranscript = '';
 
             if (this._onResult) {
                 this._onResult({
@@ -239,9 +265,9 @@ class SpeechHandler {
             }
 
             // After delivering a final result, stop to avoid duplicate processing
-            this.stopListening();
+            this.stopListening(false);
         } else {
-            // Interim result – restart timeout while user is still speaking
+            // Interim result – user is still speaking or finishing
             this._startTimeout();
         }
     }
@@ -249,22 +275,43 @@ class SpeechHandler {
     /** @private */
     _handleError(event) {
         const errorMap = {
-            'no-speech':        'No speech detected. Please try again.',
+            'no-speech':        'No speech heard. Speak clearly or click the card directly!',
             'audio-capture':    'Microphone not found. Check your audio input device.',
-            'not-allowed':      'Microphone access denied. Please grant permission.',
-            'network':          'Network error occurred during recognition.',
-            'aborted':          'Recognition was aborted.',
+            'not-allowed':      'Microphone blocked. Please allow microphone access in your browser bar.',
+            'network':          'Network timeout with speech recognition service. You can also click the cards directly!',
+            'aborted':          'Recognition stopped.',
             'service-not-available': 'Speech service is currently unavailable.'
         };
 
-        const message = errorMap[event.error] || `Recognition error: ${event.error}`;
+        const message = errorMap[event.error] || `Recognition notice: ${event.error}`;
 
-        // Some errors are recoverable
-        const recoverable = ['no-speech', 'network', 'aborted'].includes(event.error);
-
-        if (recoverable && !this._intentionalStop && this._retryCount < this.maxRetries) {
-            // Will auto-restart in _handleEnd
+        // If we have an interim transcript captured before the error, deliver that instead of failing!
+        if (this._lastInterimTranscript && this._onResult) {
+            const text = this._lastInterimTranscript;
+            this._lastInterimTranscript = '';
+            this.stopListening(false);
+            this._onResult({
+                transcript: text,
+                confidence: 0.75,
+                alternatives: [{ transcript: text, confidence: 0.75 }]
+            });
             return;
+        }
+
+        // Fatal errors (e.g. microphone permission denied) must be displayed immediately
+        if (event.error === 'not-allowed' || event.error === 'audio-capture') {
+            this._setState('error');
+            if (this._onError) {
+                this._onError({ error: event.error, message });
+            }
+            return;
+        }
+
+        // For no-speech or network, retry at most once, then inform user
+        if (['no-speech', 'network'].includes(event.error)) {
+            if (this._retryCount < 1 && !this._intentionalStop) {
+                return; // One auto-restart
+            }
         }
 
         this._setState('error');
@@ -277,12 +324,22 @@ class SpeechHandler {
     _handleEnd() {
         this._clearTimeout();
 
+        // If recognition ended but we had interim words, deliver them!
+        if (this._lastInterimTranscript && this._onResult && !this._intentionalStop) {
+            const text = this._lastInterimTranscript;
+            this._lastInterimTranscript = '';
+            this._isListening = false;
+            this._setState('idle');
+            this._onResult({
+                transcript: text,
+                confidence: 0.75,
+                alternatives: [{ transcript: text, confidence: 0.75 }]
+            });
+            return;
+        }
+
         if (!this._intentionalStop && this._isListening && this._retryCount < this.maxRetries) {
-            // Auto-restart: the recogniser sometimes stops unexpectedly
             this._retryCount++;
-            console.info(
-                `[SpeechHandler] Auto-restart attempt ${this._retryCount}/${this.maxRetries}`
-            );
             try {
                 this._recognition.start();
                 this._startTimeout();
@@ -307,33 +364,45 @@ class SpeechHandler {
 
     /** @private */
     _handleSoundEnd() {
-        // Sound ended – give a short grace period then timeout
-        this._startTimeout();
+        // Sound ended – give a short grace period (1.5s) then finalize
+        this._startTimeout(1500);
     }
 
     /** @private */
     _handleNoMatch() {
-        console.info('[SpeechHandler] No match – sound detected but not recognised.');
-        // Let timeout / auto-restart handle recovery
+        console.info('[SpeechHandler] No match detected.');
     }
 
     // ─── Timeout management ─────────────────────────────────────────────
 
     /** @private */
-    _startTimeout() {
+    _startTimeout(customMs = null) {
         this._clearTimeout();
+        const duration = customMs || this.timeoutMs;
         this._timeoutTimer = setTimeout(() => {
             if (this._isListening) {
-                console.info('[SpeechHandler] Silence timeout reached.');
-                this.stopListening();
+                // If we captured any interim text before silence, process it now!
+                if (this._lastInterimTranscript && this._onResult) {
+                    const text = this._lastInterimTranscript;
+                    this._lastInterimTranscript = '';
+                    this.stopListening(false);
+                    this._onResult({
+                        transcript: text,
+                        confidence: 0.75,
+                        alternatives: [{ transcript: text, confidence: 0.75 }]
+                    });
+                    return;
+                }
+
+                this.stopListening(false);
                 if (this._onError) {
                     this._onError({
-                        error: 'timeout',
-                        message: `No speech detected within ${this.timeoutMs / 1000} seconds.`
+                        error: 'no-speech',
+                        message: "I didn't hear anything. Tap the mic and try speaking, or click the card directly!"
                     });
                 }
             }
-        }, this.timeoutMs);
+        }, duration);
     }
 
     /** @private */

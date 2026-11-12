@@ -55,7 +55,7 @@
 
     <!-- Microphone Section -->
     <div class="mic-section">
-        <button class="mic-btn" id="mic-btn" onclick="game && game.startListening()" title="Click to speak">
+        <button class="mic-btn" id="mic-btn" onclick="game && game.toggleListening()" title="Click to speak (Click again to stop & evaluate)">
             🎤
         </button>
         <div class="waveform" id="waveform">
@@ -68,6 +68,17 @@
             <div class="waveform-bar"></div>
             <div class="waveform-bar"></div>
             <div class="waveform-bar"></div>
+        </div>
+        <p class="text-muted small mt-2 mb-0">
+            💡 <strong>Tip:</strong> Click mic to speak (click again to stop & evaluate), or <strong>click either card directly!</strong>
+        </p>
+
+        <!-- Manual text testing fallback -->
+        <div class="mt-3 d-flex justify-content-center">
+            <div class="input-group input-group-sm" style="max-width: 380px;">
+                <input type="text" id="manual-speech-input" class="form-control" placeholder="Or type pronunciation (e.g. ship, shep)" onkeydown="if(event.key==='Enter') game && game.submitManualInput()">
+                <button class="btn btn-outline-primary" type="button" onclick="game && game.submitManualInput()">Test Word</button>
+            </div>
         </div>
     </div>
 
